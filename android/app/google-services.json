@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "297865868386",
+    "project_id": "radiant-land-120510",
+    "storage_bucket": "radiant-land-120510.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297865868386:android:7af9ad4d04ba4242e38d3b",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297865868386-9qmih4mdfmssfaa026p1s7e81g4rcv5h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALIIRkPdkIa-5NvYxb_Ekl0E6Td_MOlCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297865868386-9qmih4mdfmssfaa026p1s7e81g4rcv5h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297865868386:android:1417c7b47fa71a44e38d3b",
+        "android_client_info": {
+          "package_name": "com.help.theneedy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297865868386-9qmih4mdfmssfaa026p1s7e81g4rcv5h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALIIRkPdkIa-5NvYxb_Ekl0E6Td_MOlCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297865868386-9qmih4mdfmssfaa026p1s7e81g4rcv5h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
