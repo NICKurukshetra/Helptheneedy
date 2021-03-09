@@ -22,10 +22,15 @@ class ChildLabor extends StatelessWidget {
   }
 }
 
+String _value;
+String objtext;
+var _currencies = ['6 to 8', '8 to 10', '10 to 12', '12 to 14'];
+
 var imgpath;
 var imgurl;
 var lat;
 var lng;
+String _uname, _usermobile;
 
 // Create a Form widget.
 class MyCustomForm extends StatefulWidget {
@@ -40,11 +45,12 @@ class MyCustomFormState extends State<MyCustomForm> {
   TextEditingController myLocController = TextEditingController();
   TextEditingController myNameController = TextEditingController();
   TextEditingController myMobController = TextEditingController();
+  TextEditingController myRemarksController = TextEditingController();
 
   getuserdetail() async {
     final prefs = await SharedPreferences.getInstance();
-    myNameController.text = prefs.getString("username");
-    myMobController.text = prefs.getString("usermobile");
+    _uname = prefs.getString("username");
+    _usermobile = prefs.getString("usermobile");
   }
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
@@ -90,7 +96,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   final _formKey = GlobalKey<FormState>();
-  List<String> _locations = ['6 to 8', '8 to 10', '10 to 12', '12 to 14'];
+
   String _selectedAge;
   String _category;
   @override
@@ -98,193 +104,182 @@ class MyCustomFormState extends State<MyCustomForm> {
     // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
         children: <Widget>[
-          TextFormField(
-            controller: myNameController,
-            decoration: const InputDecoration(
-              icon: const Icon(Icons.person),
-              hintText: 'Enter your full name',
-              labelText: 'Name of Informer',
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: myMobController,
-            decoration: const InputDecoration(
-              icon: const Icon(Icons.phone),
-              hintText: 'Enter a phone number',
-              labelText: 'Phone no of informer',
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter valid phone number';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: myLocController,
-            enabled: false,
-            decoration: const InputDecoration(
-              icon: const Icon(Icons.location_city),
-              hintText: 'Enter your Place',
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter Place';
-              }
-              return null;
-            },
-          ),
-          Container(
-              child: ListView(
-            shrinkWrap: true,
-            // padding: EdgeInsets.all(10.0),
-            children: [
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    //Text("Gender"),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.accessibility,
-                          color: Colors.grey,
-                        ),
-                        Padding(padding: EdgeInsets.only(left: 20.0)),
-                        Text(
-                          "Male",
-                          style: TextStyle(),
-                        ),
-                        Radio(
-                          value: "Male",
-                          groupValue: _category,
-                          onChanged: (value) {
-                            setState(() {
-                              _category = value;
-                            });
-                          },
-                        ),
-                        Padding(padding: EdgeInsets.only(left: 50.0)),
-                        Text("Female"),
-                        Radio(
-                          value: "Female",
-                          groupValue: _category,
-                          onChanged: (value) {
-                            setState(() {
-                              _category = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ])
-            ],
-          )),
+          Padding(
+              padding: EdgeInsets.only(top: 30, left: 20, right: 20),
+              child: TextFormField(
+                controller: myLocController,
+                enabled: false,
+                decoration: const InputDecoration(
+                  fillColor: Colors.red,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  hintText: 'Enter your Place',
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter Place';
+                  }
+                  return null;
+                },
+              )),
+
           //Padding(padding: EdgeInsets.only(left: 10.0, top: 10.0)),
           //Text("Age"),
           Padding(
-            padding: EdgeInsets.only(left: 40, bottom: 0, top: 0),
-            child: Divider(
-              color: Colors.black,
-              height: 15.0,
-            ),
-          ),
-          Container(
-            width: 400,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.account_circle_rounded,
-                  color: Colors.grey,
+              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: TextFormField(
+                controller: myRemarksController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  hintText: 'Enter Remarks',
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 15.0),
-                ),
-                DropdownButton(
-                  hint: Text('Approximate Child Age'),
-
-                  // Not necessary for Option 1
-                  value: _selectedAge,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedAge = newValue;
-                    });
-                  },
-                  items: _locations.map((location) {
-                    return DropdownMenuItem(
-                      child: new Text(location),
-                      value: location,
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Row(
-              children: [
-                Padding(padding: EdgeInsets.only(left: 50.0)),
-                new RaisedButton(
-                    child: const Text('Upload Image'), onPressed: clickPhoto),
-                Padding(padding: EdgeInsets.only(left: 50.0)),
-                new RaisedButton(
-                    child: const Text('Upload Video'), onPressed: () {}),
-              ],
-            ),
-          ),
-          Padding(
-              padding: EdgeInsets.only(left: 30),
-              child: InkWell(
-                child: CircleAvatar(
-                  radius: 60.0,
-                  backgroundImage: imgurl != null ? NetworkImage(imgurl) : null,
-                ),
-              )),
-
-          new Container(
-              padding: const EdgeInsets.only(left: 150.0, top: 40.0),
-              child: new RaisedButton(
-                child: const Text('Submit'),
-                onPressed: () async {
-                  // It returns true if the form is valid, otherwise returns false
-                  if (_formKey.currentState.validate()) {
-                    setState(() {});
-                    // If the form is valid, display a Snackbar.
-                    final fs = FirebaseFirestore.instance;
-                    await fs
-                        .collection("data")
-                        .doc("Child Labour")
-                        .collection("Child Labour")
-                        .add({
-                          'Requestby': myNameController.text,
-                          'RequestMob': myMobController.text,
-                          //Data ap per Required Page
-                          'Category': 'Child Labour',
-                          'Age': _selectedAge,
-                          'Sex': _category,
-                          //---Data collection end
-                          'imageurl': imgurl,
-                          "latitude": lat,
-                          "longitude": lng,
-                          "status": "Open"
-                        })
-                        .whenComplete(() =>
-                            showdg(context, "Alert Success", "Record Saved"))
-                        .onError((error, stackTrace) => null);
-                    Navigator.of(context, rootNavigator: true).pop();
-                    Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text('Data is in processing.')));
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter Remarks';
                   }
+                  return null;
                 },
               )),
+
+          Padding(
+              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    labelText: "Select Gender",
+                    errorStyle:
+                        TextStyle(color: Colors.redAccent, fontSize: 12.0),
+                    hintText: 'Please select',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(width: 2.0, color: Colors.red),
+                        borderRadius: BorderRadius.circular(20)),
+                    focusColor: Colors.red),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Male",
+                      style: TextStyle(),
+                    ),
+                    Radio(
+                      value: "Male",
+                      groupValue: _category,
+                      onChanged: (value) {
+                        setState(() {
+                          _category = value;
+                        });
+                      },
+                    ),
+                    Text("Female"),
+                    Radio(
+                      value: "Female",
+                      groupValue: _category,
+                      onChanged: (value) {
+                        setState(() {
+                          _category = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              )),
+
+          Padding(
+              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    labelText: "Select Age",
+                    errorStyle:
+                        TextStyle(color: Colors.redAccent, fontSize: 12.0),
+                    hintText: 'Please select',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20))),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    autofocus: true,
+                    isDense: true,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        _value = newValue;
+                      });
+                    },
+                    value: _value,
+                    items: _currencies.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              )),
+          Container(
+            child: Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 80, left: 20, right: 20),
+                ),
+                new ElevatedButton.icon(
+                    onPressed: clickPhoto,
+                    icon: Icon(Icons.camera_alt),
+                    label: Text("Upload image")),
+                Padding(padding: EdgeInsets.only(left: 50.0)),
+                new ElevatedButton.icon(
+                    onPressed: clickPhoto,
+                    icon: Icon(Icons.video_collection),
+                    label: Text("Upload Video")),
+              ],
+            ),
+          ),
+          Container(
+            width: 100.0,
+            height: 100.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            ),
+            child: Image.network(
+              imgurl != null ? imgurl : "",
+              height: 100.0,
+              width: 100.0,
+            ),
+          ),
+
+          new Container(
+              padding: EdgeInsets.only(top: 20, left: 30, right: 30),
+              child: new ElevatedButton.icon(
+                  onPressed: () async {
+                    // It returns true if the form is valid, otherwise returns false
+                    if (_formKey.currentState.validate()) {
+                      setState(() {});
+                      // If the form is valid, display a Snackbar.
+                      final fs = FirebaseFirestore.instance;
+                      await fs.collection("data").add({
+                        'Requestby': _uname,
+                        'RequestMob': _usermobile,
+                        //Data ap per Required Page
+                        'Category': 'Child Labour',
+                        'Age': _selectedAge,
+                        'Sex': _category,
+                        //---Data collection end
+                        'Remarks': myRemarksController.text,
+                        'imageurl': imgurl,
+                        "latitude": lat,
+                        "longitude": lng,
+                        "status": "Open"
+                      }).whenComplete(() => Navigator.of(context).pop());
+
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(content: Text('Data is in processing.')),
+                      );
+                      //sleep(Duration(seconds: 5));
+                    }
+                  },
+                  icon: Icon(Icons.save_alt_outlined),
+                  label: Text("Submit Your Request"))),
         ],
       ),
     );

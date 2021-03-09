@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_application_2/Latest.dart';
 
 class Donate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Item Donation Form'),
-      ),
-      body: MyCustomForm(),
+      body: Latest(),
     );
   }
 }

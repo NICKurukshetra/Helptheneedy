@@ -28,10 +28,8 @@ class MapScreenState extends State<ProfilePage> {
   String _site = "NGO";
 
   @override
-  Future<void> initState() async {
-    // TODO: implement initState
-
-    final prefs = await SharedPreferences.getInstance();
+  void initState() {
+    final prefs = SharedPreferences.getInstance();
     if (_user != null) {
       myControllerName.text = _user.displayName;
       myControllerEmail.text = _user.email;

@@ -34,34 +34,42 @@ class _SplashState extends State<Splash> {
   void initState() {
     initializeFlutterFire();
     super.initState();
-    Timer(Duration(seconds: 3), () => checkuser(context));
+    Timer(Duration(seconds: 10), () => checkuser(context));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            color: (Colors.white),
+            color: Color.fromARGB(255, 30, 38, 82),
             child: Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  color: Colors.white,
+                  color: Colors.transparent,
                   child: Image.asset(
                     "assets/as.png",
                     width: 100,
                   ),
                 ),
+                Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Text(
+                      "Help The Needy",
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    )),
                 Container(
                     margin: const EdgeInsets.only(top: 125.0, bottom: 25.0),
-                    color: Colors.white,
-                    child: new CircularProgressIndicator()),
+                    color: Colors.transparent,
+                    child: new CircularProgressIndicator(
+                      backgroundColor: Colors.pinkAccent,
+                    )),
                 Text(
-                  "Please wait..Loading..",
+                  "Please wait..Loading....",
                   style: TextStyle(
                     fontSize: 20,
-                    color: Colors.green[200],
+                    color: Colors.white,
                   ),
                 )
               ],

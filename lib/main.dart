@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage>
                   icon: Icon(Icons.camera_alt_outlined),
                 ),
                 Tab(text: "Needy"),
-                Tab(text: "Donate"),
+                Tab(text: "Needy Request"),
                 Tab(
                   text: "Associates",
                 ),
@@ -179,7 +179,7 @@ void showdg(BuildContext context, String title, String message) {
       title: new Text(title),
       content: Text(message),
       actions: <Widget>[
-        new FlatButton(
+        new ElevatedButton(
           onPressed: () {
             Navigator.of(context, rootNavigator: true)
                 .pop(); // dismisses only the dialog and returns nothing

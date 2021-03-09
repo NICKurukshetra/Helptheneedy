@@ -6,7 +6,6 @@ import 'package:flutter_application_2/profile.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
 class Loginpage extends StatefulWidget {
   @override
   _LoginpageState createState() => _LoginpageState();
@@ -16,29 +15,29 @@ class _LoginpageState extends State<Loginpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber[200],
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            Container(
+                alignment: Alignment.center,
+                margin:
+                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 180),
+                child: Image.asset(
+                  "assets/as.png",
+                  width: 100,
+                )),
             Container(
                 width: 400,
                 height: 50,
                 alignment: Alignment.center,
                 margin:
-                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 180.0),
+                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
                 child: Text(
-                  "Social Login",
-                  style: TextStyle(
-                      fontSize: 35, fontFamily: "Arial", color: Colors.black),
+                  "Welcome Login",
+                  style: TextStyle(fontSize: 35, color: Colors.black),
                 )),
             Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10),
-                child: Image.asset(
-                  "assets/as.png",
-                  width: 50,
-                )),
-            Container(
+              
               width: 400,
               height: 50,
               margin: const EdgeInsets.only(left: 15.0, right: 15.0, top: 80.0),
@@ -50,13 +49,13 @@ class _LoginpageState extends State<Loginpage> {
               height: 25,
             ),
             Container(
-                width: 400,
-                height: 50,
-                margin: const EdgeInsets.only(
-                  left: 15.0,
-                  right: 15.0,
-                ),
-                child: SignInButton(Buttons.Facebook, onPressed: () {})),
+              width: 400,
+              height: 50,
+              margin: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
+              child: SignInButton(Buttons.Facebook, onPressed: () {
+                onGoogleSignIn(context);
+              }),
+            ),
           ],
         ),
       ),
