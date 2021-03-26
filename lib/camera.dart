@@ -15,6 +15,12 @@ class _CameraState extends State<Camera> {
   final _picker = ImagePicker();
 
   @override
+  void initState() {
+    _pickImageFromCamera();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[

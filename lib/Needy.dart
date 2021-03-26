@@ -1,272 +1,167 @@
 import 'package:flutter/material.dart';
-import 'ChildLabor.dart';
-import './InjuredAnimal.dart';
-import './ShelterHome.dart';
-import './Blood.dart';
-import './Accident.dart';
+import 'package:flutter_application_2/ChildEducation.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class Needy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[50],
+      backgroundColor: Colors.grey[300],
       body: Stack(
         children: [
           GridView.count(
             primary: false,
             padding: const EdgeInsets.all(20),
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            crossAxisCount: 2,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5,
+            crossAxisCount: 3,
             children: <Widget>[
-              Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(15.0),
-                    ),
-                  ),
-                  elevation: 5,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ChildLabor()),
-                      );
-                    },
-                    child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.ac_unit_sharp,
-                              color: Colors.blue,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 120),
-                              child: Text(
-                                "Child Labour",
-                                style: TextStyle(color: Colors.blueGrey[600]),
-                              ),
-                            )
-                          ],
-                        )),
-                  )),
+              MyCard(
+                title: 'Child Labour',
+                micon: MdiIcons.humanBabyChangingTable,
+                age: "2",
+                gender: "1",
+                routepage: null,
+              ),
+              MyCard(
+                title: "Child Education (Dropouts)",
+                micon: MdiIcons.library,
+                age: "2",
+                gender: "1",
+              ),
               //Injured Animal
-              Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(15.0),
-                    ),
-                  ),
-                  elevation: 5,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => InjuredAnimal()),
-                      );
-                    },
-                    child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.ac_unit_sharp,
-                              color: Colors.blue,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 120),
-                              child: Text(
-                                "Injured Animal Care",
-                                style: TextStyle(color: Colors.blueGrey[600]),
-                              ),
-                            )
-                          ],
-                        )),
-                  )),
-              Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(15.0),
-                    ),
-                  ),
-                  elevation: 5,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ShelterHome()),
-                      );
-                    },
-                    child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(Icons.home, color: Colors.blue),
-                            Padding(
-                              padding: EdgeInsets.only(top: 120),
-                              child: Text(
-                                "Shelter Home",
-                                style: TextStyle(color: Colors.blueGrey[600]),
-                              ),
-                            )
-                          ],
-                        )),
-                  )),
-              Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(15.0),
-                    ),
-                  ),
-                  elevation: 5,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Blood()),
-                      );
-                    },
-                    child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(Icons.app_blocking_rounded,
-                                color: Colors.blue),
-                            Padding(
-                              padding: EdgeInsets.only(top: 120),
-                              child: Text(
-                                "Blood",
-                                style: TextStyle(color: Colors.blueGrey[600]),
-                              ),
-                            )
-                          ],
-                        )),
-                  )),
-              Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(15.0),
-                    ),
-                  ),
-                  elevation: 5,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Accident()),
-                      );
-                    },
-                    child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(Icons.accessible_rounded, color: Colors.blue),
-                            Padding(
-                              padding: EdgeInsets.only(top: 120),
-                              child: Text(
-                                "Accident",
-                                style: TextStyle(color: Colors.blueGrey[600]),
-                              ),
-                            )
-                          ],
-                        )),
-                  )),
 
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15.0),
-                  ),
-                ),
-                elevation: 5,
-                child: Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(Icons.accessibility_sharp, color: Colors.blue),
-                        Padding(
-                          padding: EdgeInsets.only(top: 120),
-                          child: Text("Rehabilation Center",
-                              style: TextStyle(color: Colors.blueGrey[600])),
-                        )
-                      ],
-                    )),
+              MyCard(
+                title: "Missing Child",
+                micon: MdiIcons.accountChildCircle,
+                age: "2",
+                gender: "1",
               ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15.0),
-                  ),
-                ),
-                elevation: 5,
-                child: Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(Icons.cast_for_education, color: Colors.blue),
-                        Padding(
-                          padding: EdgeInsets.only(top: 120),
-                          child: Text("Child Education",
-                              style: TextStyle(color: Colors.blueGrey[600])),
-                        )
-                      ],
-                    )),
+              MyCard(
+                title: "Domestic Violence",
+                micon: MdiIcons.humanFemaleFemale,
+                age: "1",
+                gender: "1",
               ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15.0),
-                  ),
-                ),
-                elevation: 5,
-                child: Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(Icons.euro_outlined, color: Colors.blue),
-                        Padding(
-                          padding: EdgeInsets.only(top: 120),
-                          child: Text("Donation",
-                              style: TextStyle(color: Colors.blueGrey[600])),
-                        )
-                      ],
-                    )),
+              MyCard(
+                title: "Runaway Child",
+                micon: MdiIcons.runFast,
+                age: "2",
+                gender: "1",
               ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15.0),
-                  ),
-                ),
-                elevation: 5,
-                child: Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(Icons.rice_bowl_rounded, color: Colors.blue),
-                        Padding(
-                          padding: EdgeInsets.only(top: 120),
-                          child: Text("Deceased Animal Pickup",
-                              style: TextStyle(color: Colors.blueGrey[600])),
-                        )
-                      ],
-                    )),
+              MyCard(
+                title: "Elderly Care \n (at Home)",
+                micon: MdiIcons.humanCane,
+              ),
+              MyCard(
+                title: "Elderly Care \n (Old Age Home)",
+                micon: MdiIcons.humanHandsdown,
+              ),
+              MyCard(
+                title: "Shelter Home",
+                micon: MdiIcons.homeAlertOutline,
+                age: "1",
+                gender: "1",
+              ),
+              MyCard(
+                title: "Injured Animal",
+                micon: MdiIcons.dogService,
+                age: "0",
+                gender: "0",
+              ),
+              MyCard(
+                title: "Accident",
+                micon: MdiIcons.car,
+                age: "1",
+                gender: "1",
+              ),
+              MyCard(
+                title: "De Addiction",
+                micon: MdiIcons.bottleWineOutline,
+                age: "1",
+                gender: "1",
+              ),
+
+              MyCard(
+                title: "Dead Animal Pickup",
+                micon: MdiIcons.cow,
+                age: "0",
+                gender: "0",
+              ),
+              MyCard(
+                title: "Donate (Clothes,Food)",
+                micon: MdiIcons.tshirtCrew,
+                age: "0",
+                gender: "0",
+              ),
+              MyCard(
+                title: "Blood",
+                micon: MdiIcons.waterAlertOutline,
+                age: "1",
+                gender: "1",
               ),
             ],
           ),
         ],
       ),
     );
+  }
+}
+
+class MyCard extends StatelessWidget {
+  MyCard({
+    this.title,
+    this.micon,
+    this.age,
+    this.gender,
+    this.routepage,
+  });
+  final String title;
+  final IconData micon;
+
+  final Widget routepage;
+  final String age;
+  final String gender;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(5.0),
+          ),
+        ),
+        elevation: 2,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChildEducation(title, gender, age)),
+            );
+          },
+          child: Padding(
+              padding: EdgeInsets.all(5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    micon,
+                    size: 40,
+                    color: Colors.teal[500],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 0),
+                    child: Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 32),
+                    ),
+                  )
+                ],
+              )),
+        ));
   }
 }

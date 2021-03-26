@@ -24,9 +24,12 @@ dependencies:
   camera: 
   path_provider:
   path:
+  image_picker: ^0.6.1+4
   flutter:
     sdk: flutter
-   
+  #google_maps_flutter : ^0.5.27+3 
+  #location: ^3.0.2
+  #material_design_icons_flutter: ^3.2.3895
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -34,20 +37,23 @@ dependencies:
   cupertino_icons: ^1.0.0
   share: ^0.6.4+3
   url_launcher: ^5.4.10
-  flutter_signin_button: ^1.1.0
-  firebase_auth: "^0.20.0+1"
-  firebase_core: ^0.7.0
-  firebase_database: ^6.0.0
-  cloud_firestore: ^0.16.0+1
-  image_picker: ^0.6.7+22
+  material_design_icons_flutter: ^4.0.5955
   firebase_storage: ^7.0.0
   google_maps_flutter: ^0.5.30
   geolocator: ^5.3.2+2
   google_sign_in: "^4.5.1"
   shared_preferences: "^0.4.2"
-  flutter_form_bloc: ^0.19.0
-  
-  
+  firebase_auth: "^0.20.0+1"
+  firebase_core: ^0.7.0
+  firebase_database: ^6.0.0
+  cloud_firestore: ^0.16.0+1
+  flutter_signin_button: ^1.1.0
+  fab_circular_menu: ^1.0.0
+  flutter_webview_plugin: ^0.3.11
+  permission_handler: ^4.4.0+hotfix.2
+  android_intent: ^2.0.0
+  flutter_facebook_login:
+
 
 
 dev_dependencies:

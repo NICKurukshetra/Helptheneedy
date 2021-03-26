@@ -1,268 +1,481 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Associates extends StatelessWidget {
   @override
+  // ignore: override_on_non_overriding_member
+  void launchemergency({
+    @required int phone,
+    @required String message,
+  }) async {
+    String url() {
+      return "https://wa.me/$phone::/?text=${Uri.parse(message)}";
+    }
+
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('NGOs Entry'),
-      ),
-      body: MyCustomForm(),
-    );
-  }
-}
-
-enum BestTutorSite { Volunteer, NGO }
-
-// Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
-  }
-}
-
-// Create a corresponding State class, which holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  bool _checkBoxVal1 = false;
-  bool _checkBoxVal2 = false;
-  bool _checkBoxVal3 = false;
-  bool _checkBoxVal4 = false;
-  bool _checkBoxVal5 = false;
-  bool _checkBoxVal6 = false;
-  bool _checkBoxVal7 = false;
-  bool _checkBoxVal8 = false;
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  BestTutorSite _site = BestTutorSite.Volunteer;
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: ListView(
-        shrinkWrap: true,
-        padding: EdgeInsets.all(10.0),
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.only(left: 50.0)),
-                  Text(
-                    "VOLUNTEER",
-                    style: TextStyle(),
-                  ),
-                  Radio(
-                    value: BestTutorSite.Volunteer,
-                    groupValue: _site,
-                    onChanged: (BestTutorSite value) {
-                      setState(() {
-                        _site = value;
-                      });
-                    },
-                  ),
-                  Padding(padding: EdgeInsets.only(left: 50.0)),
-                  Text("NGO"),
-                  Radio(
-                    value: BestTutorSite.NGO,
-                    groupValue: _site,
-                    onChanged: (BestTutorSite value) {
-                      setState(() {
-                        _site = value;
-                      });
-                    },
-                  ),
-                ],
+        body: Stack(children: [
+      Card(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Divider(
+              color: Colors.grey,
+            ),
+            ExpansionTile(
+              leading: Icon(
+                Icons.home,
+                size: 50,
               ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  icon: const Icon(Icons.add_box),
-                  hintText: 'Enter NGO Registration number',
-                  labelText: 'Registration number',
+              title: Text("Shelter Home"),
+              children: <Widget>[
+                Divider(
+                  color: Colors.grey,
                 ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter valid Registration number';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  icon: const Icon(Icons.person),
-                  hintText: 'Enter your full name',
-                  labelText: 'Contact Person Name',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  icon: const Icon(Icons.phone),
-                  hintText: 'Enter a phone number',
-                  labelText: 'Contact Person Phone number',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter valid phone number';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  //filled: true,
-                  icon: Icon(Icons.email),
-                  hintText: 'Your email address',
-                  labelText: 'E-mail',
-                ),
-                /*keyboardType: TextInputType.emailAddress,
-            onSaved: (String value) {
-              this._email = value;
-              print('email=$_email');
-            },*/
-              ),
-              //const SizedBox(height: 24.0),
-              TextFormField(
-                decoration: const InputDecoration(
-                  icon: const Icon(Icons.location_city),
-                  hintText: 'Enter your Place',
-                  labelText: 'Place',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter Place';
-                  }
-                  return null;
-                },
-              ),
-              Container(
-                  padding: EdgeInsets.only(left: 40.0, top: 20.0, bottom: 10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Category',
-                          style: TextStyle(),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
                         ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Text('Child Labor'),
-                                  Checkbox(
-                                    onChanged: (bool value) {
-                                      setState(
-                                          () => this._checkBoxVal1 = value);
-                                    },
-                                    value: this._checkBoxVal1,
-                                  ),
-                                  const Text('Injured Animals Care'),
-                                  Checkbox(
-                                    onChanged: (bool value) {
-                                      setState(
-                                          () => this._checkBoxVal2 = value);
-                                    },
-                                    value: this._checkBoxVal2,
-                                  ),
-                                  const Text('Shelter Home'),
-                                  Checkbox(
-                                    onChanged: (bool value) {
-                                      setState(
-                                          () => this._checkBoxVal3 = value);
-                                    },
-                                    value: this._checkBoxVal3,
-                                  ),
-                                ],
-                              ),
-                              Row(children: [
-                                const Text('Blood'),
-                                Checkbox(
-                                  onChanged: (bool value) {
-                                    setState(() => this._checkBoxVal4 = value);
-                                  },
-                                  value: this._checkBoxVal4,
-                                ),
-                                const Text('Accident'),
-                                Checkbox(
-                                  onChanged: (bool value) {
-                                    setState(() => this._checkBoxVal5 = value);
-                                  },
-                                  value: this._checkBoxVal5,
-                                ),
-                                const Text('Rehabilitation Center'),
-                                Checkbox(
-                                  onChanged: (bool value) {
-                                    setState(() => this._checkBoxVal6 = value);
-                                  },
-                                  value: this._checkBoxVal6,
-                                ),
-                              ]),
-                              Row(
-                                children: [
-                                  const Text('Child Education'),
-                                  Checkbox(
-                                    onChanged: (bool value) {
-                                      setState(
-                                          () => this._checkBoxVal7 = value);
-                                    },
-                                    value: this._checkBoxVal7,
-                                  ),
-                                  const Text('Donation'),
-                                  Checkbox(
-                                    onChanged: (bool value) {
-                                      setState(
-                                          () => this._checkBoxVal8 = value);
-                                    },
-                                    value: this._checkBoxVal8,
-                                  ),
-                                  const Text('Deceased Animal Pickup'),
-                                  Checkbox(
-                                    onChanged: (bool value) {
-                                      setState(
-                                          () => this._checkBoxVal8 = value);
-                                    },
-                                    value: this._checkBoxVal8,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      ])),
-              Container(
-                  padding: const EdgeInsets.only(left: 30.0, top: 20.0),
-                  child: new RaisedButton(
-                      child: const Text('upload image'), onPressed: () {})),
-              new Container(
-                  padding: const EdgeInsets.only(left: 150.0, top: 40.0),
-                  child: new RaisedButton(
-                    child: const Text('Submit'),
-                    onPressed: () {
-                      // It returns true if the form is valid, otherwise returns false
-                      if (_formKey.currentState.validate()) {
-                        // If the form is valid, display a Snackbar.
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Data is in processing.')));
-                      }
-                    },
-                  )),
-            ],
-          ),
-        ],
-      ),
-    );
+                        onPressed: () => launch("tel://9355332211"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Shree Sanatan Vidyapeeth Trust"),
+                  //subtitle: Text("Donate Blood"),
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://9812089840"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Midway House"),
+                  // subtitle: Text("Donate Cloths, Footwear, Bag etc"),
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://9416730940"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Prarna Vridha Ashram"),
+                  //    subtitle: Text("For Children"),
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://8818000024"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Haryana Navyugkala Sangam Vridha Ashram"),
+                  //subtitle: Text("Human Rights"),
+                  onTap: () {},
+                  /* onTap: () {
+                        Navigator.pop(context);
+                      },*/
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://9416734007"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Baba Bansi Wala Vridha Ashram"),
+                  //subtitle: Text("Human Rights"),
+                  onTap: () {},
+                  /* onTap: () {
+                        Navigator.pop(context);
+                      },*/
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://9896042142"),
+                      ),
+                    ],
+                  ),
+                  title: Text(
+                      "Dainik Vridha Dekhbhal kendra mook avam badhir school "),
+                  //subtitle: Text("Human Rights"),
+                  onTap: () {},
+                  /* onTap: () {
+                        Navigator.pop(context);
+                      },*/
+                ),
+              ],
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            ExpansionTile(
+              leading: Icon(
+                MdiIcons.humanChild,
+                size: 50,
+              ),
+              title: Text("Labour/Missing Child"),
+              children: <Widget>[
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://8053130007"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Jiwan Me Vishwas Bal Ashram, Ladwa"),
+                  //subtitle: Text("Donate Blood"),
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://8168322245"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Udayan Care, Kurykshetra"),
+                  // subtitle: Text("Donate Cloths, Footwear, Bag etc"),
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://9518185606"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Vishwas Baal Ashram Shahabad"),
+                  //    subtitle: Text("For Children"),
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://7988881471"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Open Shelter  Home, Kurukshetra"),
+                  //subtitle: Text("Human Rights"),
+                  onTap: () {},
+                  /* onTap: () {
+                        Navigator.pop(context);
+                      },*/
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://9416700220"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Vatsalya Vatika, Truest"),
+                  //subtitle: Text("Human Rights"),
+                  onTap: () {},
+                  /* onTap: () {
+                        Navigator.pop(context);
+                      },*/
+                ),
+              ],
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            ExpansionTile(
+              leading: Icon(
+                Icons.water_damage,
+                size: 50,
+              ),
+              title: Text("Blood Banks"),
+              children: <Widget>[
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://01744220335"),
+                      ),
+                    ],
+                  ),
+                  title: Text("Red Cross Kurukshetra"),
+                  //subtitle: Text("Donate Blood"),
+                ),
+              ],
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            ExpansionTile(
+              leading: Icon(
+                Icons.local_hospital_outlined,
+                size: 55,
+              ),
+              title: Text("Accident Help Centers"),
+              children: <Widget>[
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://"),
+                      ),
+                    ],
+                  ),
+                  title: Text(""),
+                  //subtitle: Text("Donate Blood"),
+                ),
+              ],
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            ExpansionTile(
+              leading: Icon(
+                MdiIcons.bottleWineOutline,
+                size: 50,
+              ),
+              title: Text("De Addiction Centers"),
+              children: <Widget>[
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://"),
+                      ),
+                    ],
+                  ),
+                  title: Text(""),
+                  //subtitle: Text("Donate Blood"),
+                ),
+              ],
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            ExpansionTile(
+              leading: Icon(
+                MdiIcons.library,
+                size: 50,
+              ),
+              title: Text("Child Educations"),
+              children: <Widget>[
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://"),
+                      ),
+                    ],
+                  ),
+                  title: Text(""),
+                  //subtitle: Text("Donate Blood"),
+                ),
+              ],
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            ExpansionTile(
+              leading: Icon(
+                MdiIcons.tshirtCrew,
+                size: 50,
+              ),
+              title: Text("Donation"),
+              children: <Widget>[
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://"),
+                      ),
+                    ],
+                  ),
+                  title: Text(""),
+                  //subtitle: Text("Donate Blood"),
+                ),
+              ],
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            ExpansionTile(
+              leading: Icon(
+                (MdiIcons.dogSide),
+                //Icons.ac_unit_sharp,
+
+                size: 50,
+              ),
+              title: Text("Deceased Animal Care Centers"),
+              children: <Widget>[
+                Divider(
+                  color: Colors.grey,
+                ),
+                ListTile(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blue[900],
+                        ),
+                        onPressed: () => launch("tel://"),
+                      ),
+                    ],
+                  ),
+                  title: Text(""),
+                  //subtitle: Text("Donate Blood"),
+                ),
+              ],
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+          ],
+        ),
+      )
+    ]));
   }
 }

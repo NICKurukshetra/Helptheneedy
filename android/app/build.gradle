@@ -27,6 +27,14 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\Administrator\\Helptheneedy\\helptheneedy.jks')
+            storePassword 'touch@123'
+            keyAlias 'key0'
+            keyPassword 'touch@123'
+        }
+    }
     compileSdkVersion 29
 
     sourceSets {
@@ -44,6 +52,8 @@ android {
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        signingConfig signingConfigs.release
+
     }
 
     buildTypes {

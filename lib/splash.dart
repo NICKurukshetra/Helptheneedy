@@ -34,34 +34,36 @@ class _SplashState extends State<Splash> {
   void initState() {
     initializeFlutterFire();
     super.initState();
-    Timer(Duration(seconds: 10), () => checkuser(context));
+    Timer(Duration(seconds: 5), () => checkuser(context));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            color: Color.fromARGB(255, 30, 38, 82),
+            //color: Color.fromARGB(230, 30, 38, 80),
+            color: Colors.teal[300],
             child: Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  color: Colors.transparent,
+                  // color: Colors.transparent,
                   child: Image.asset(
-                    "assets/as.png",
-                    width: 100,
+                    "assets/mlogo1.png",
+                    width: 150,
                   ),
                 ),
                 Padding(
                     padding: EdgeInsets.all(20),
                     child: Text(
-                      "Help The Needy",
-                      style: TextStyle(color: Colors.white, fontSize: 25),
+                      "HelpTheNeedy",
+                      style: TextStyle(fontSize: 25, color: Colors.white),
                     )),
                 Container(
-                    margin: const EdgeInsets.only(top: 125.0, bottom: 25.0),
-                    color: Colors.transparent,
+                    margin: const EdgeInsets.only(top: 40.0, bottom: 25.0),
+                    //  color: Colors.transparent,
                     child: new CircularProgressIndicator(
                       backgroundColor: Colors.pinkAccent,
                     )),
@@ -71,6 +73,17 @@ class _SplashState extends State<Splash> {
                     fontSize: 20,
                     color: Colors.white,
                   ),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: Image.asset(
+                      "assets/niclogo.png",
+                      width: 150,
+                    )),
+                Padding(padding: EdgeInsets.only(top: 10)),
+                Text(
+                  "Designed & Developed by NIC Kurukshetra",
+                  style: TextStyle(color: Colors.white),
                 )
               ],
             ))));
@@ -79,13 +92,13 @@ class _SplashState extends State<Splash> {
   void checkuser(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     String uid = prefs.getString("userid");
-    if (uid != null || uid.isNotEmpty) {
-      Navigator.push(
+    if (uid != null) {
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     } else {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Loginpage()),
       );

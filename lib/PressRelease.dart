@@ -8,16 +8,28 @@ class PressRelease extends StatelessWidget {
         appBar: AppBar(
           title: Text("Press Release"),
         ),
-        body: Stack(children: [
-          Padding(padding: EdgeInsets.all(50)),
-          Card(
-            elevation: 5,
-            child: Image.asset(
-              'assets/PR1.jpeg',
-              //fit: BoxFit.cover,
-              //alignment: Alignment.center,
-            ),
-          ),
-        ]));
+        body: ListView(
+          padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+          children: [
+            Column(children: [
+              Card(
+                elevation: 10,
+                child: Image.asset(
+                  'assets/PR1.jpeg',
+                  //fit: BoxFit.cover,
+                  //alignment: Alignment.center,
+                ),
+              ),
+              Card(
+                elevation: 10,
+                child: Image.asset(
+                  'assets/PR2.jpeg',
+                  //fit: BoxFit.cover,
+                  //alignment: Alignment.center,
+                ),
+              ),
+            ])
+          ],
+        ));
   }
 }

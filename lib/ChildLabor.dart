@@ -15,7 +15,7 @@ class ChildLabor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Child Labor Entry Form'),
+        title: Text('Child Labour/Run Away Children'),
       ),
       body: MyCustomForm(),
     );
@@ -24,12 +24,16 @@ class ChildLabor extends StatelessWidget {
 
 String _value;
 String objtext;
-var _currencies = ['6 to 8', '8 to 10', '10 to 12', '12 to 14'];
+var _currencies = ['Minor below 8', 'Tender 9 to 14', 'Juvenile Below 18'];
 
 var imgpath;
 var imgurl;
 var lat;
 var lng;
+
+//New Change
+bool _imagevis = false;
+//--
 String _uname, _usermobile;
 
 // Create a Form widget.
@@ -57,23 +61,25 @@ class MyCustomFormState extends State<MyCustomForm> {
   // final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   //Future<Position> position =      Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
+//Changed
   clickPhoto() async {
     var picker = ImagePicker();
     var img = await picker.getImage(source: ImageSource.camera);
-    setState(() {
+    setState(() async {
       if (img != null) {
         imgpath = File(img.path);
+
+        var fbstore = FirebaseStorage.instance.ref().child("path").child(DateTime
+                .now()
+            .toString()); //to connect to core bucket we use ref function & child will create folder if not present
+        await fbstore.putFile(imgpath);
+        var imgurl1 = await fbstore.getDownloadURL();
+        setState(() {
+          imgurl = imgurl1;
+          _imagevis = true;
+        });
       }
     });
-    var fbstore = FirebaseStorage.instance.ref().child("path").child(DateTime
-            .now()
-        .toString()); //to connect to core bucket we use ref function & child will create folder if not present
-    await fbstore.putFile(imgpath);
-    var imgurl1 = await fbstore.getDownloadURL();
-    setState(() {
-      imgurl = imgurl1;
-    });
-    print(imgurl);
   }
 
   location() async {
@@ -90,8 +96,10 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   @override
   void initState() {
+    
     location();
     getuserdetail();
+    imgurl = null;
     super.initState();
   }
 
@@ -127,22 +135,6 @@ class MyCustomFormState extends State<MyCustomForm> {
 
           //Padding(padding: EdgeInsets.only(left: 10.0, top: 10.0)),
           //Text("Age"),
-          Padding(
-              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-              child: TextFormField(
-                controller: myRemarksController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  hintText: 'Enter Remarks',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Enter Remarks';
-                  }
-                  return null;
-                },
-              )),
 
           Padding(
               padding: EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -217,6 +209,22 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ),
                 ),
               )),
+          Padding(
+              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: TextFormField(
+                controller: myRemarksController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  hintText: 'Enter Remarks',
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter Remarks';
+                  }
+                  return null;
+                },
+              )),
           Container(
             child: Row(
               children: [
@@ -227,7 +235,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     onPressed: clickPhoto,
                     icon: Icon(Icons.camera_alt),
                     label: Text("Upload image")),
-                Padding(padding: EdgeInsets.only(left: 50.0)),
+                Padding(padding: EdgeInsets.only(left: 20.0)),
                 new ElevatedButton.icon(
                     onPressed: clickPhoto,
                     icon: Icon(Icons.video_collection),
@@ -235,19 +243,23 @@ class MyCustomFormState extends State<MyCustomForm> {
               ],
             ),
           ),
-          Container(
-            width: 100.0,
-            height: 100.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-            child: Image.network(
-              imgurl != null ? imgurl : "",
-              height: 100.0,
-              width: 100.0,
-            ),
-          ),
+          //---New
+          Visibility(
+              visible: _imagevis ? _imagevis : _imagevis,
+              child: Container(
+                width: 100.0,
+                height: 100.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                ),
+                child: Image.network(
+                  imgurl != null ? imgurl : "",
+                  height: 100.0,
+                  width: 100.0,
+                ),
+              )),
 
+//New
           new Container(
               padding: EdgeInsets.only(top: 20, left: 30, right: 30),
               child: new ElevatedButton.icon(
@@ -255,6 +267,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                     // It returns true if the form is valid, otherwise returns false
                     if (_formKey.currentState.validate()) {
                       setState(() {});
+                      if (imgurl == null) {
+                        showdg(context, "Erro ?", "Upload image");
+                        return;
+                      }
                       // If the form is valid, display a Snackbar.
                       final fs = FirebaseFirestore.instance;
                       await fs.collection("data").add({
@@ -283,5 +299,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         ],
       ),
     );
+    
   }
+  
 }

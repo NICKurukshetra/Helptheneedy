@@ -1,31 +1,55 @@
+import 'package:camera/camera.dart';
+import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Associates.dart';
 
+import 'package:flutter_application_2/Latest.dart';
+import 'package:flutter_application_2/splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './Needy.dart';
-import './Donate.dart';
-import './Associates.dart';
+import './PressRelease.dart';
 import './camera.dart';
 import 'package:share/share.dart';
-// ignore: unused_import
 import 'package:url_launcher/url_launcher.dart';
-
-import 'splash.dart';
-// ignore: unused_import
-// import 'package:flutter_launch/flutter_launch.dart';
+import './Emergency.dart';
+import './AboutUs.dart';
+import './Nearby.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import './Feedback.dart';
+import 'logdesign.dart';
+import 'loginscreen.dart';
 
 //import './Recent.dart';
-
 String _username;
 String _useremail;
 String _userphotourl;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Splash(),
-  ));
+      debugShowCheckedModeBanner: false,
+      home: Splash(),
+      theme: ThemeData(
+        // Define the default brightness and colors.
+
+        primaryColor: Colors.teal[400],
+        accentColor: Colors.black87,
+        accentColorBrightness: Brightness.dark,
+        applyElevationOverlayColor: true,
+
+        // Define the default font family.
+        fontFamily: 'Arial',
+
+        // Define the default TextTheme. Use this to specify the default
+        // text styling for headlines, titles, bodies of text, and more.
+        textTheme: TextTheme(
+          headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+        ),
+      )));
 }
 
 class HomePage extends StatefulWidget {
@@ -39,13 +63,11 @@ class _HomePageState extends State<HomePage>
 
   // ignore: non_constant_identifier_names
   String ShareText =
-      "Welcome to Help the Needy App, Install the app for helping the needy from : https://play.google.com/store/apps/details?id=edapps.com.flutter_tutorials_and_quizzes";
+      "Welcome to Help the Needy App, Install the app for helping the needy from : https://play.google.com/store/apps/details?id=com.help.theneedy";
   @override
   void initState() {
-    //   _tabController = new TabController(length: 4, initialIndex: 1, vsync: this);
-
-    super.initState();
     setuser();
+    super.initState();
   }
 
   @override
@@ -70,90 +92,210 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 4,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.blue,
+    return DefaultTabController(
+      initialIndex: 1,
+      length: 4,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80.0),
+          child: AppBar(
             title: Text('HelpTheNeedy'),
             actions: [
               // action button
               IconButton(
-                icon: Icon(Icons.share_rounded),
+                icon: Icon(MdiIcons.alarmLight),
+                tooltip: 'Press in Emergency',
+                iconSize: 35.0,
                 onPressed: () {
-                  Share.share(ShareText);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Emergency()),
+                  );
                 },
               ),
             ],
             centerTitle: true,
             bottom: TabBar(
-              tabs: [
-                Tab(
-                  icon: Icon(Icons.camera_alt_outlined),
-                ),
-                Tab(text: "Needy"),
-                Tab(text: "Needy Request"),
-                Tab(
-                  text: "Associates",
-                ),
-              ],
-            ),
-          ),
-          drawer: Drawer(
-            // Add a ListView to the drawer. This ensures the user can scroll
-            // through the options in the drawer if there isn't enough vertical
-            // space to fit everything.
-            child: ListView(
-              // Important: Remove any padding from the ListView.
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                UserAccountsDrawerHeader(
-                  accountName: Text(_username != null ? _username : "NO User"),
-                  accountEmail: Text(_useremail != null
-                      ? _useremail
-                      : "codeplayonapp@gmail.com"),
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor:
-                        Theme.of(context).platform == TargetPlatform.iOS
-                            ? Colors.blue
-                            : Colors.white,
-                    child: Text(
-                      "P",
-                      style: TextStyle(fontSize: 40.0),
-                    ),
+              isScrollable: true,
+              tabs: <Widget>[
+                Container(
+                  width: 20,
+                  child: Icon(
+                    Icons.camera_alt,
+                    size: 25.0,
                   ),
                 ),
-                ListTile(
-                  title: Text('About Us'),
-                  onTap: () {
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawer
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: Text('Contact Us'),
-                  onTap: () {
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawer
-                    Navigator.pop(context);
-                  },
-                ),
+                Container(
+                    width: 65,
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Needy",
+                      style: TextStyle(fontSize: 15.0),
+                    )),
+                Container(
+                    width: 65,
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Latest",
+                      style: TextStyle(fontSize: 15.0),
+                    )),
+                Container(
+                    width: 100,
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "NGO's",
+                      style: TextStyle(fontSize: 15.0),
+                    )),
               ],
             ),
           ),
-          body: TabBarView(
-            children: [
-              Camera(),
-              Needy(),
-              Donate(),
-              Associates(),
+        ),
+        drawer: Drawer(
+          // Add a ListView to the drawer. This ensures the user can scroll
+          // through the options in the drawer if there isn't enough vertical
+          // space to fit everything.
+          child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountName: Text(_username != null ? _username : "NO User"),
+                accountEmail: Text(_useremail != null
+                    ? _useremail
+                    : "codeplayonapp@gmail.com"),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage:
+                      NetworkImage(_userphotourl != null ? _userphotourl : ""),
+                  backgroundColor:
+                      Theme.of(context).platform == TargetPlatform.iOS
+                          ? Colors.blue
+                          : Colors.white,
+                ),
+              ),
+              ListTile(
+                title: Text('About Us'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AboutUs()),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Near By Me'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Nearby()),
+                  );
+
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  // Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Press Release'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PressRelease()),
+                  );
+
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  // Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Contact Us'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Arun()),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Share'),
+                onTap: () {
+                  Share.share(ShareText);
+                },
+                trailing: IconButton(
+                  icon: Icon(Icons.share_rounded),
+                  onPressed: () {
+                    Share.share(ShareText);
+                  },
+                ),
+              ),
+              ListTile(
+                title: Text('LogOut'),
+                onTap: () async {
+                  SharedPreferences preferences =
+                      await SharedPreferences.getInstance();
+                  await preferences.clear();
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Loginpage()),
+                  );
+                },
+                trailing: IconButton(
+                  icon: Icon(Icons.logout),
+                  onPressed: () {},
+                ),
+              ),
+              ListTile(
+                title: Text('How  Its Work'),
+                onTap: () async {
+                  await launch("https://youtu.be/Xr80Iqkruek");
+                },
+                trailing: IconButton(
+                  icon: Icon(Icons.video_collection_outlined),
+                  onPressed: () {},
+                ),
+              )
             ],
-            controller: _tabController,
           ),
+        ),
+        floatingActionButton: Builder(
+          builder: (context) => FabCircularMenu(
+            alignment: Alignment.bottomRight,
+            ringColor: Colors.teal,
+            ringDiameter: 200.0,
+            ringWidth: 50.0,
+            fabSize: 50.0,
+            fabElevation: 8.0,
+            fabOpenIcon: Icon(Icons.menu, color: Colors.white),
+            fabCloseIcon: Icon(Icons.close, color: Colors.white),
+            fabMargin: const EdgeInsets.all(20.0),
+            animationDuration: const Duration(milliseconds: 800),
+            animationCurve: Curves.easeInOutCirc,
+            children: <Widget>[
+              SizedBox(),
+              FloatingActionButton(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.home),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
+              ),
+              FloatingActionButton(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.search),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [Camera(), Needy(), Latest(), Associates()],
+          controller: _tabController,
         ),
       ),
     );
@@ -181,8 +323,12 @@ void showdg(BuildContext context, String title, String message) {
       actions: <Widget>[
         new ElevatedButton(
           onPressed: () {
-            Navigator.of(context, rootNavigator: true)
-                .pop(); // dismisses only the dialog and returns nothing
+            Navigator.of(context).pop();
+            // dismisses only the dialog and returns nothing
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
           },
           child: new Text('OK'),
         ),
