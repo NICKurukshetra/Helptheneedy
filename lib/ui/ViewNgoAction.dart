@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/Apiservices.dart';
@@ -38,11 +36,11 @@ class _NgoActionState extends State<NgoAction> {
                         return Card(
                             child: ListTile(
                           tileColor: Colors.white10,
-                          title: Text("NGO Name :" + snapshot.data[index].ngo),
+                          title: Text("NGO : " + snapshot.data[index].ngo),
                           subtitle: Text("Action : " +
                               snapshot.data[index].action +
                               'Dated ' +
-                              snapshot.data[index].dated.toString()),
+                              snapshot.data[index].dated),
                         ));
                       },
                     )

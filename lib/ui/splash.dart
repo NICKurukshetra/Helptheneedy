@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/AppStateNotifier.dart';
 import 'package:provider/provider.dart';
 import 'loginscreen.dart';
-import 'main.dart';
+import '../main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHome extends StatelessWidget {

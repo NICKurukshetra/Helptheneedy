@@ -1,25 +1,28 @@
-import 'dart:developer';
 import 'dart:ui';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/Apiservices.dart';
 import 'package:flutter_application_2/models/NgoAction.dart';
+import 'package:video_player/video_player.dart';
 import 'ViewNgoAction.dart';
-import 'main.dart';
+import '../main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'video_items.dart';
+
 //import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 // ignore: unused_import
-
+enum UrlType { IMAGE, VIDEO, UNKNOWN }
 bool NGO = false;
 String _ngoname;
-String _id;
+int _id;
 String _remarks;
 String _imgurl;
 String _category;
 String _sex;
 String _age;
-String _lat, _long, _status, _dated;
+String _lat, _long, _status, _dated, _mtype;
 
 class ViewRequest extends StatefulWidget {
   final String id;
@@ -28,10 +31,10 @@ class ViewRequest extends StatefulWidget {
   final String category;
   final sex;
   final String age;
-  final String lat, long, status, dated;
+  final String lat, long, status, dated, mtype;
   ViewRequest(this.id, this.remarks, this.age, this.category, this.dated,
-      this.imgurl, this.lat, this.long, this.sex, this.status) {
-    _id = id;
+      this.imgurl, this.lat, this.long, this.sex, this.status, this.mtype) {
+    _id = int.parse(id);
     _remarks = remarks;
     _imgurl = imgurl;
     _category = category;
@@ -40,6 +43,7 @@ class ViewRequest extends StatefulWidget {
     _lat = lat;
     _long = long;
     _status = status;
+    _mtype = mtype;
     _dated = dated;
   }
 
@@ -48,10 +52,43 @@ class ViewRequest extends StatefulWidget {
 }
 
 class _State extends State<ViewRequest> {
+  VideoPlayerController controller; // used to controller videos
+  ChewieController _chewieController;
   @override
   Future<void> initState() {
     setuser();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    _chewieController.dispose();
+    super.dispose();
+  }
+
+  Future<void> futureController() async {
+    controller = VideoPlayerController.network(_imgurl);
+    await controller.initialize();
+    _chewieController = ChewieController(
+      videoPlayerController: controller,
+      autoPlay: true,
+      looping: true,
+      // Try playing around with some of these other options:
+
+      // showControls: false,
+      // materialProgressColors: ChewieProgressColors(
+      //   playedColor: Colors.red,
+      //   handleColor: Colors.blue,
+      //   backgroundColor: Colors.grey,
+      //   bufferedColor: Colors.lightGreen,
+      // ),
+      // placeholder: Container(
+      //   color: Colors.grey,
+      // ),
+      // autoInitialize: true,
+    );
+    setState(() {});
   }
 
   @override
@@ -60,26 +97,39 @@ class _State extends State<ViewRequest> {
         appBar: AppBar(
           title: Text('View Request'),
         ),
-        body: Column(children: [
-          SingleChildScrollView(
-              child: Card(
+        body: ListView(children: [
+          Card(
             margin: EdgeInsets.all(20),
             elevation: 10,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
               children: [
                 Column(
                   children: [
                     Card(
                       margin: EdgeInsets.all(20),
-                      child: CircleAvatar(
-                        maxRadius: 90.0,
-                        backgroundImage: NetworkImage(_imgurl),
-                      ),
-                      elevation: 5.0,
-                      shape: CircleBorder(),
+                      child: _mtype == 'V'
+                          ? Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.teal)),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width - 100,
+                                height: MediaQuery.of(context).size.width - 200,
+                                child: VideoItems(
+                                  videoPlayerController:
+                                      VideoPlayerController.network(_imgurl),
+                                  looping: false,
+                                  autoplay: false,
+                                ),
+                              ),
+                            )
+                          : CircleAvatar(
+                              maxRadius: 90.0,
+                              backgroundImage: NetworkImage(_imgurl),
+                            ),
+                      elevation: 0.0,
+                      // shape: CircleBorder(),
                     ),
                     Text(
                       _category,
@@ -88,7 +138,21 @@ class _State extends State<ViewRequest> {
                     ),
                     Divider(
                       color: Colors.black,
-                      height: 10,
+                      height: 3,
+                    ),
+                    Visibility(
+                        visible: (_age.isNotEmpty) ? true : false,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Age : " + _age),
+                            Text("  Gender : " + _sex)
+                          ],
+                        )),
+                    Divider(
+                      color: Colors.black,
+                      height: 3,
                     ),
                     Container(
                         width: MediaQuery.of(context).size.width * 0.8,
@@ -110,7 +174,7 @@ class _State extends State<ViewRequest> {
                               onPressed: () {
                                 navigateTo(_lat, _long);
                               },
-                              icon: Icon(Icons.gps_fixed_outlined),
+                              icon: Icon(Icons.my_location_rounded),
                               label: const Text('Track Geo Location',
                                   style: TextStyle(fontSize: 12)))
                         ],
@@ -166,12 +230,12 @@ class _State extends State<ViewRequest> {
 
                                   var res =
                                       await APIServices.postNGoData(users);
-                                  if (res == 0) {
+                                  if (res != 200) {
                                     showdg(
                                         context, "Error", "Error saving data");
                                     return;
                                   }
-                                  if (res == 1) {
+                                  if (res == 200) {
                                     showdg(context, "Success", "Needy Ignored");
                                   }
                                 },
@@ -194,12 +258,12 @@ class _State extends State<ViewRequest> {
 
                                   var res =
                                       await APIServices.postNGoData(users);
-                                  if (res == 0) {
+                                  if (res != 200) {
                                     showdg(
                                         context, "Error", "Error saving data");
                                     return;
                                   }
-                                  if (res == 1) {
+                                  if (res == 200) {
                                     showdg(context, "Success", "Needy on Hold");
                                   }
                                 },
@@ -218,16 +282,20 @@ class _State extends State<ViewRequest> {
                 ),
               ],
             ),
-          )),
-          ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NgoAction(_id)),
-                );
-              },
-              icon: Icon(Icons.list_alt_rounded),
-              label: Text("View NGO Action"))
+          ),
+          Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: ElevatedButton.icon(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NgoAction(_id.toString())),
+                    );
+                  },
+                  icon: Icon(Icons.list_alt_rounded),
+                  label: Text("View NGO Action")))
         ]));
   }
 

@@ -1,24 +1,23 @@
 import 'dart:io';
 
 import 'package:android_intent/android_intent.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/Apiservices.dart';
 import 'package:flutter_application_2/models/Data.dart';
-import 'package:flutter_application_2/ui/main.dart';
+import 'package:flutter_application_2/main.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_player/video_player.dart';
 
 String _cat;
 bool _Age;
 bool _Gender;
 bool _child;
-bool _imagevis = false;
 
 class ChildEducation extends StatelessWidget {
   ChildEducation(String cat, String Gender, String Age) {
@@ -37,23 +36,6 @@ class ChildEducation extends StatelessWidget {
     );
   }
 }
-
-String _value;
-String objtext;
-var _currencies = [
-  '1 to 10',
-  '10 to 20',
-  '20 to 40',
-  '40 to 60',
-  'Above 60',
-  'Not Known'
-];
-var _childval = ['1 to 5', '5 to 10', '10 to 14', 'Not Known'];
-
-var imgpath;
-var imgurl;
-String lat;
-String lng;
 
 //New Change
 
@@ -74,7 +56,36 @@ class MyCustomFormState extends State<MyCustomForm> {
   TextEditingController myNameController = TextEditingController();
   TextEditingController myMobController = TextEditingController();
   TextEditingController myRemarksController = TextEditingController();
-  var img = null;
+  String mediatype;
+  bool _imagevis = false;
+  bool _videovis = false;
+  bool _imageinit = false;
+  bool _videointi = false;
+
+  String _value;
+  String objtext;
+  var _currencies = [
+    '1 to 10',
+    '10 to 20',
+    '20 to 40',
+    '40 to 60',
+    'Above 60',
+    'Not Known'
+  ];
+  var _childval = ['1 to 5', '5 to 10', '10 to 14', 'Not Known'];
+  var fileurl;
+  String lat;
+  String lng;
+
+  bool startedPlaying = false;
+  VideoPlayerController controller; // used to controller videos
+  Future<bool> futureController() async {
+    //await controller.initialize();
+
+    startedPlaying = true;
+    return true;
+  }
+
   getuserdetail() async {
     final prefs = await SharedPreferences.getInstance();
     _uname = prefs.getString("username");
@@ -92,11 +103,21 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   clickPhoto() async {
+    setState(() {
+      _imagevis = true;
+      _imageinit = true;
+
+      fileurl = null;
+      _videovis = false;
+      _videointi = false;
+
+      //futureController.call();
+    });
     var picker = ImagePicker();
-    img = await picker.getImage(source: ImageSource.camera);
+    var img = await picker.getImage(source: ImageSource.camera);
 
     if (img != null) {
-      imgpath = File(img.path);
+      var imgpath = File(img.path);
 
       var fbstore = FirebaseStorage.instance.ref().child("path").child(DateTime
               .now()
@@ -104,8 +125,44 @@ class MyCustomFormState extends State<MyCustomForm> {
       await fbstore.putFile(imgpath);
       var imgurl1 = await fbstore.getDownloadURL();
       setState(() {
-        imgurl = imgurl1;
+        fileurl = imgurl1;
+        _imageinit = false;
         _imagevis = true;
+        mediatype = 'I';
+      });
+    }
+  }
+
+  clickVideo() async {
+    setState(() {
+      _videovis = true;
+      _videointi = true;
+
+      fileurl = null;
+      _imagevis = false;
+      _imageinit = false;
+      //futureController.call();
+    });
+    var picker = ImagePicker();
+    var video = await picker.getVideo(
+      source: ImageSource.camera,
+      maxDuration: const Duration(seconds: 240),
+    );
+
+    if (video != null) {
+      var fbstore = FirebaseStorage.instance.ref().child("path").child(DateTime
+              .now()
+          .toString()); //to connect to core bucket we use ref function & child will create folder if not present
+
+      await fbstore.putFile(File(video.path));
+      var url = await fbstore.getDownloadURL();
+
+      setState(() {
+        fileurl = url;
+        _videointi = false;
+        controller = new VideoPlayerController.network(url);
+        futureController.call();
+        mediatype = 'V';
       });
     }
   }
@@ -127,7 +184,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     getPermisson();
     location();
     getuserdetail();
-    imgurl = null;
+    fileurl = null;
     super.initState();
   }
 
@@ -171,69 +228,58 @@ class MyCustomFormState extends State<MyCustomForm> {
               child: Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: InputDecorator(
-                    decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        labelText: "Select Gender",
-                        errorStyle:
-                            TextStyle(color: Colors.redAccent, fontSize: 12.0),
-                        hintText: 'Please select',
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 2.0, color: Colors.red),
-                            borderRadius: BorderRadius.circular(20)),
-                        focusColor: Colors.red),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Male",
-                              style: TextStyle(),
-                            ),
-                            Radio(
-                              value: "Male",
-                              groupValue: _category,
-                              onChanged: (value) {
-                                setState(() {
-                                  _category = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text("Female"),
-                            Radio(
-                              value: "Female",
-                              groupValue: _category,
-                              onChanged: (value) {
-                                setState(() {
-                                  _category = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text("Transgender"),
-                            Radio(
-                              value: "Transgender",
-                              groupValue: _category,
-                              onChanged: (value) {
-                                setState(() {
-                                  _category = value;
-                                });
-                              },
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ))),
+                      decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          labelText: "Select Gender",
+                          errorStyle: TextStyle(
+                              color: Colors.redAccent, fontSize: 12.0),
+                          hintText: 'Please select',
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(width: 2.0, color: Colors.red),
+                              borderRadius: BorderRadius.circular(20)),
+                          focusColor: Colors.red),
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        alignment: WrapAlignment.spaceAround,
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "Male",
+                            style: TextStyle(),
+                          ),
+                          Radio(
+                            value: "Male",
+                            groupValue: _category,
+                            onChanged: (value) {
+                              setState(() {
+                                _category = value;
+                              });
+                            },
+                          ),
+                          Text("Female"),
+                          Radio(
+                            value: "Female",
+                            groupValue: _category,
+                            onChanged: (value) {
+                              setState(() {
+                                _category = value;
+                              });
+                            },
+                          ),
+                          Text("Transgender"),
+                          Radio(
+                            value: "Transgender",
+                            groupValue: _category,
+                            onChanged: (value) {
+                              setState(() {
+                                _category = value;
+                              });
+                            },
+                          )
+                        ],
+                      )))),
 
           Visibility(
             visible: _Gender,
@@ -285,11 +331,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20))),
-                  hintText: 'Enter Complete Details',
+                  hintText: 'Enter Details',
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Enter Remarks';
+                    return 'Enter Details';
                   }
                   return null;
                 },
@@ -305,16 +351,16 @@ class MyCustomFormState extends State<MyCustomForm> {
                     label: Text("Upload image")),
                 Padding(padding: EdgeInsets.only(left: 20.0)),
                 new ElevatedButton.icon(
-                    onPressed: clickPhoto,
+                    onPressed: clickVideo,
                     icon: Icon(Icons.video_collection),
                     label: Text("Upload Video")),
               ],
             ),
           ),
-          //---New
+          //---Image
           Visibility(
-            visible: _imagevis ? _imagevis : _imagevis,
-            child: img != null
+            visible: _imagevis,
+            child: fileurl != null
                 ? Container(
                     width: 100.0,
                     height: 100.0,
@@ -322,17 +368,42 @@ class MyCustomFormState extends State<MyCustomForm> {
                       borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     ),
                     child: Image.network(
-                      imgurl != null ? imgurl : "",
+                      fileurl != null ? fileurl : "",
                       height: 100.0,
                       width: 100.0,
                     ),
                   )
-                : new CircularProgressIndicator(
-                    backgroundColor: Colors.pinkAccent,
-                  ),
+                : new Center(child: CircularProgressIndicator()),
           ),
 
-//New
+//Video
+          Visibility(
+              visible: _videovis,
+              child: _videointi
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 100.0,
+                      child: FutureBuilder(
+                        future: futureController(),
+                        builder: (context, snapshot) {
+                          // if video to ready to play, else show a progress bar to the user
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return AspectRatio(
+                                aspectRatio: 16 / 9,
+                                child: VideoPlayer(controller));
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                      ),
+                    )),
           new Container(
               padding: EdgeInsets.only(top: 20, left: 30, right: 30),
               child: new ElevatedButton.icon(
@@ -340,71 +411,45 @@ class MyCustomFormState extends State<MyCustomForm> {
                     // It returns true if the form is valid, otherwise returns false
                     {
                       //setState(() {});
-                      if (imgurl == null) {
-                        showdg(context, "Error ?", "Upload image");
-                        return;
-                      }
-                      if (myRemarksController.text.length == 0) {
-                        _formKey.currentState.validate();
-                        return;
-                      }
-                      if (myLocController.text.length == 0) {
-                        _formKey.currentState.validate();
-                        return;
-                      }
-                      if (_selectedAge.length == 0) {
-                        return;
-                      }
-                      if (_category.length == 0) {
-                        return;
-                      }
-
-                      // If the form is valid, display a Snackbar.
-                      /* final fs = FirebaseFirestore.instance;
-                      await fs.collection("data").add({
-                        'Requestby': _uname,
-                        'RequestMob': _usermobile,
-                        //Data ap per Required Page
-                        'Category': _cat,
-                        'Age': _selectedAge,
-                        'Sex': _category,
-                        //---Data collection end
-                        'Remarks': myRemarksController.text,
-                        'imageurl': imgurl,
-                        "latitude": lat,
-                        "longitude": lng,
-                        "status": "Open"
-                      }).whenComplete(() => Navigator.of(context).pop()); */
-
-                      try {
-                        NeedyData users = NeedyData(
-                            requestby: _uname,
-                            requestmob: _usermobile,
-                            category: _cat,
-                            age: _selectedAge,
-                            sex: _category,
-                            remarks: myRemarksController.text,
-                            imgurl: imgurl,
-                            lat: lat,
-                            longit: lng,
-                            status: 'Open');
-
-                        var res = await APIServices.postNeedyData(users)
-                            .whenComplete(() => null);
-
-                        if (res.toString() == "1") {
-                          Scaffold.of(context).showSnackBar(
-                              SnackBar(content: Text('Data Submitted..')));
-
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
+                      if (_formKey.currentState.validate() == true) {
+                        if (_Age == true && _selectedAge == null) {
+                          showSnack(context, "Select Age");
+                          return;
                         }
-                      } on Exception catch (exception) {
-                        print(exception);
-                      } catch (exception) {
-                        print(exception);
+                        if (_Gender == true && _category == null) {
+                          showSnack(context, "Select Category");
+                          return;
+                        }
+                        if (fileurl == null) {
+                          showSnack(context, "Upload image/videos");
+                          return;
+                        }
+
+                        try {
+                          NeedyData users = NeedyData(
+                              requestby: _uname,
+                              requestmob: _usermobile,
+                              category: _cat,
+                              age: _selectedAge,
+                              sex: _category,
+                              remarks: myRemarksController.text,
+                              imgurl: fileurl,
+                              lat: lat,
+                              longit: lng,
+                              mediatype: mediatype,
+                              status: 'Open');
+                          showSnack(context, "Processing Data..");
+                          var res = await APIServices.postNeedyData(users)
+                              .whenComplete(() => null);
+
+                          if (res.toString() == "1") {
+                            showdg(context, "Success", "Request Submitted");
+                          }
+                        } on Exception catch (exception) {
+                          print(exception);
+                        } catch (exception) {
+                          print(exception);
+                        }
                       }
                     }
                   },

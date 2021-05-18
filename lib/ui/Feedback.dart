@@ -1,7 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_2/ui/main.dart';
+import 'package:flutter_application_2/main.dart';
+import 'package:flutter_application_2/models/Apiservices.dart';
+import 'package:flutter_application_2/models/FeedbackModel.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:url_launcher/url_launcher.dart';
 //import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -113,15 +115,24 @@ class _ArunState extends State<Arun> {
                           setState(() {});
                           return;
                         }
-                        final fs = FirebaseFirestore.instance;
-                        await fs.collection("Feedback").add({
-                          'Requestby': mycontName.text,
-                          'RequestMob': mycontMob.text,
-                          'RequestEmail': mycontEmail.text,
-                          "Feedback": mycontFeedback.text
-                        }).whenComplete(
-                            () => showdg(context, "Success", "Feedback Sent"));
-                        mycontFeedback.text = "";
+
+                        Feedbackmod users = new Feedbackmod(
+                            requestby: mycontName.text,
+                            requestMob: mycontMob.text,
+                            requestEmail: mycontEmail.text,
+                            remarks: mycontFeedback.text);
+
+                        var res = await APIServices.postFeedback(users)
+                            .whenComplete(() => null);
+                        if (res == 200) {
+                          await showdg(
+                              context, "Success", "Feedback Submitted");
+
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()));
+                        }
                       },
                       label: Text('Submit Feedback'),
                       icon: Icon(Icons.save_alt_outlined),

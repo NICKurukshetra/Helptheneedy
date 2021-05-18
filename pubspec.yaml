@@ -46,14 +46,14 @@ dependencies:
   shared_preferences: "^0.4.2"
   firebase_auth: "^0.20.0+1"
   firebase_core: ^0.7.0
-  firebase_database: ^6.0.0
-  cloud_firestore: ^0.16.0+1
+  video_player: ^2.1.1
   flutter_signin_button: ^1.1.0
   fab_circular_menu: ^1.0.0
   flutter_webview_plugin: ^0.3.11
   permission_handler: ^4.4.0+hotfix.2
   android_intent: ^2.0.0
   http: ^0.12.1
+  chewie: ^1.0.0
   flutter_facebook_login:
   
 

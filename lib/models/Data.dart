@@ -10,6 +10,8 @@ class NeedyData {
   final String lat;
   final String longit;
   final String status;
+  final String mediatype;
+
   final String dated;
 
   NeedyData(
@@ -24,6 +26,7 @@ class NeedyData {
       this.lat,
       this.longit,
       this.status,
+      this.mediatype,
       this.dated});
 
   //factory Users.fromJson(Map<String, dynamic> json) => Users.fromJson(json);
@@ -55,6 +58,7 @@ class NeedyData {
       lat: json['latitude'] as String,
       longit: json['longitude'] as String,
       status: json['status'] as String,
+      mediatype: json['mediatype'] as String,
       dated: json['dated'] as String,
     );
   }
@@ -69,6 +73,7 @@ class NeedyData {
         'Imgurl': instance.imgurl,
         'latitude': instance.lat,
         'longitude': instance.longit,
-        'Status': instance.status
+        'Status': instance.status,
+        'mediatype': instance.mediatype
       };
 }

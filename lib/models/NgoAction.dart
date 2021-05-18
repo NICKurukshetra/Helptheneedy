@@ -1,16 +1,16 @@
 class Ngo {
   final String ngo;
   final String action;
-  final DateTime dated;
-  final String id;
+  final String dated;
+  final int id;
   Ngo({this.id, this.ngo, this.action, this.dated});
 
   factory Ngo.fromJson(Map<String, dynamic> json) {
     return Ngo(
-      id: json['srno'] as String,
-      ngo: json['srno'] as String,
-      action: json['srno'] as String,
-      dated: json['dated'] as DateTime,
+      id: json['id'] as int,
+      ngo: json['ngo'] as String,
+      action: json['action'] as String,
+      dated: json['dated'] as String,
     );
   }
   Map<String, dynamic> toJson() => _$NgoToJson(this);

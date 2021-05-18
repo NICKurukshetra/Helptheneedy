@@ -1,12 +1,10 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/Apiservices.dart';
 import 'package:flutter_application_2/models/Data.dart';
 import 'package:flutter_application_2/ui/ViewRequest.dart';
-import 'package:path/path.dart';
 
 String _id;
 String _value;
@@ -34,7 +32,6 @@ class Latest extends StatefulWidget {
 }
 
 class _LatestState extends State<Latest> {
-  final fs = FirebaseFirestore.instance;
   var needy = <NeedyData>[];
 
   @override
@@ -100,12 +97,16 @@ class _LatestState extends State<Latest> {
                             child: ListTile(
                                 enableFeedback: true,
                                 leading: CircleAvatar(
-                                  radius: 40.0,
-                                  backgroundImage: NetworkImage(
-                                      (snapshot.data[index].imgurl) != null
-                                          ? snapshot.data[index].imgurl
-                                          : ""),
-                                  backgroundColor: Colors.transparent,
+                                  radius: 20.0,
+                                  child: snapshot.data[index].mediatype == 'I'
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          child: Image.network(
+                                            snapshot.data[index].imgurl,
+                                          ))
+                                      : Icon((Icons.play_circle_fill_rounded)),
+                                  backgroundColor: Colors.white38,
                                 ),
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +148,8 @@ class _LatestState extends State<Latest> {
                                               snapshot.data[index].lat,
                                               snapshot.data[index].longit,
                                               snapshot.data[index].sex,
-                                              snapshot.data[index].status),
+                                              snapshot.data[index].status,
+                                              snapshot.data[index].mediatype),
                                         ));
                                   }
                                 }));

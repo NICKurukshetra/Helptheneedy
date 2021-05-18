@@ -39,7 +39,7 @@ class _Emergency1State extends State<Emergency1> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Need Help! (Emergency)'),
+          title: Text('Emergency Contacts'),
         ),
         body: Stack(children: [
           SingleChildScrollView(),

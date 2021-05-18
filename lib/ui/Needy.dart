@@ -16,6 +16,18 @@ class Needy extends StatelessWidget {
             crossAxisCount: 3,
             children: <Widget>[
               MyCard(
+                title: "Shelter Home",
+                micon: MdiIcons.homeAlertOutline,
+                age: "1",
+                gender: "1",
+              ),
+              MyCard(
+                title: "Accident",
+                micon: MdiIcons.car,
+                age: "1",
+                gender: "1",
+              ),
+              MyCard(
                 title: 'Child Labour',
                 micon: MdiIcons.humanBabyChangingTable,
                 age: "2",
@@ -56,24 +68,14 @@ class Needy extends StatelessWidget {
                 title: "Elderly Care \n (Old Age Home)",
                 micon: MdiIcons.humanHandsdown,
               ),
-              MyCard(
-                title: "Shelter Home",
-                micon: MdiIcons.homeAlertOutline,
-                age: "1",
-                gender: "1",
-              ),
+
               MyCard(
                 title: "Injured Animal",
                 micon: MdiIcons.dogService,
                 age: "0",
                 gender: "0",
               ),
-              MyCard(
-                title: "Accident",
-                micon: MdiIcons.car,
-                age: "1",
-                gender: "1",
-              ),
+
               MyCard(
                 title: "De Addiction",
                 micon: MdiIcons.bottleWineOutline,

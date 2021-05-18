@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_2/models/Apiservices.dart';
 import 'package:flutter_application_2/models/UsersReg.dart';
-import 'package:flutter_application_2/ui/main.dart';
+import 'package:flutter_application_2/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 User _user;
 
