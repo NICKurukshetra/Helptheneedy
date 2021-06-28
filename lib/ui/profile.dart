@@ -22,6 +22,7 @@ class MapScreenState extends State<ProfilePage> {
   bool isEmgHomeValid = false;
   bool isEmgFrndValid = false;
   bool isRegValid = false;
+  
   final FocusNode myFocusNode = FocusNode();
   TextEditingController mycontrollerReg = TextEditingController();
   TextEditingController myControllerName = TextEditingController();

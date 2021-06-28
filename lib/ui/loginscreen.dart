@@ -122,6 +122,7 @@ class _LoginpageState extends State<Loginpage> {
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Future<User> signInWithGoogle() async {
@@ -130,8 +131,10 @@ class _LoginpageState extends State<Loginpage> {
     });
 
     await Firebase.initializeApp();
+    
 
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
 
