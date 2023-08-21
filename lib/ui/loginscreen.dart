@@ -86,7 +86,7 @@ class _LoginpageState extends State<Loginpage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                ProfilePage(value)));
+                                                ProfilePage(value.user)));
                                   }
                                 });
                               })),
@@ -162,15 +162,13 @@ class _LoginpageState extends State<Loginpage> {
     return user;
   }
 
-  Future<User> signInWithFacebook() async {
+  Future<User> signInWithFacebook1() async {
     setState(() {
       _isloading = true;
     });
 
     // Trigger the sign-in flow
     var fbinstanse = FacebookAuth.instance;
-
-    
 
     final LoginResult result = await fbinstanse.login();
 
@@ -186,6 +184,18 @@ class _LoginpageState extends State<Loginpage> {
       final User user = authResult.user;
       return user;
     }
+  }
+
+  Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken.token);
+
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 //Facebook
   // final FacebookLogin fbLogin = new FacebookLogin();

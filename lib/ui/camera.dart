@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -47,8 +48,6 @@ class _CameraState extends State<Camera> {
   }
 
   Future<void> _pickImageFromGallery() async {
-    
-    
     final PickedFile pickedFile =
         await _picker.getImage(source: ImageSource.gallery);
     setState(() => this._imageFile = File(pickedFile.path));
@@ -58,5 +57,6 @@ class _CameraState extends State<Camera> {
     final PickedFile pickedFile =
         await _picker.getImage(source: ImageSource.camera);
     setState(() => this._imageFile = File(pickedFile.path));
+    if (pickedFile.path != null) GallerySaver.saveImage(pickedFile.path);
   }
 }

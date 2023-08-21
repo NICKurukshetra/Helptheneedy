@@ -25,9 +25,17 @@ class _State extends State<Emergency> {
   @override
   void initState() {
     checkuser(context);
+    getPermisson();
     location();
 
     super.initState();
+  }
+
+  getPermisson() async {
+    LocationPermission permission;
+
+    permission = await Geolocator.requestPermission();
+    location();
   }
 
   @override
@@ -102,41 +110,39 @@ class _State extends State<Emergency> {
                       children: [
                         //Padding(padding: EdgeInsets.only(left: 5.0)),
                         ElevatedButton(
-                        
-                            onPressed: () {
-                              sms(emgHome,
-                                  'I am Safe my Location link https://map.google.com/maps/?q=$lat,$lng');
-                              sms(emgFrnd,
-                                  'I am Safe my Location link https://map.google.com/maps/?q=$lat,$lng');
-                            },
-                            child: const Text('Safe',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.white)),
-                            ),
+                          onPressed: () {
+                            sms(emgHome,
+                                'I am Safe my Location link https://map.google.com/maps/?q=$lat,$lng');
+                            sms(emgFrnd,
+                                'I am Safe my Location link https://map.google.com/maps/?q=$lat,$lng');
+                          },
+                          child: const Text('Safe',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white)),
+                        ),
                         ElevatedButton(
-                         
-                            onPressed: () {
-                              sms(emgHome,
-                                  'Kindly keep on watch my Location link https://map.google.com/maps/?q=$lat,$lng');
-                              sms(emgFrnd,
-                                  'Kindly keep on watch my Location link https://map.google.com/maps/?q=$lat,$lng');
-                            },
-                            child: const Text('Watch',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black)),
-                            ),
+                          onPressed: () {
+                            sms(emgHome,
+                                'Kindly keep on watch my Location link https://map.google.com/maps/?q=$lat,$lng');
+                            sms(emgFrnd,
+                                'Kindly keep on watch my Location link https://map.google.com/maps/?q=$lat,$lng');
+                          },
+                          child: const Text('Watch',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.black)),
+                        ),
                         ElevatedButton(
-                          
-                            onPressed: () {
-                              sms(emgHome,
-                                  'I am unsafe my Location link https://map.google.com/maps/?q=$lat,$lng');
-                              sms(emgFrnd,
-                                  'I am unsafe my Location link https://map.google.com/maps/?q=$lat,$lng');
-                            },
-                            child: const Text('Unsafe',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.white)),
-                            ),
+                          onPressed: () {
+                            location();
+                            sms(emgHome,
+                                'I am unsafe my Location link https://map.google.com/maps/?q=$lat,$lng');
+                            sms(emgFrnd,
+                                'I am unsafe my Location link https://map.google.com/maps/?q=$lat,$lng');
+                          },
+                          child: const Text('Unsafe',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white)),
+                        ),
                       ],
                     ),
                   ),
@@ -151,8 +157,8 @@ class _State extends State<Emergency> {
   }
 
   location() async {
-    var p = await Geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    var p = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     setState(() {
       lat = p.latitude;
       lng = p.longitude;

@@ -11,38 +11,45 @@ class Needy extends StatefulWidget {
 
 List<CatMas> convertedJsonData;
 
+Future<List<CatMas>> getdate() {
+  var res = APIServices.fetchCat();
+  return res;
+}
+
 class _NeedyState extends State<Needy> {
   @override
   void initState() {
     // TODO: implement initState
-    APIServices.fetchCat().then((users) {
-      setState(() {
-        convertedJsonData = users;
-      });
-    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          GridView.builder(
-            primary: false,
-            padding: const EdgeInsets.all(20),
-            itemCount: convertedJsonData.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, crossAxisSpacing: 4.0, mainAxisSpacing: 4.0),
-            itemBuilder: (BuildContext context, int index) {
-              return MyCard(
-                title: convertedJsonData[index].category,
-                micon: convertedJsonData[index].icon,
+      body: FutureBuilder<List<CatMas>>(
+          future: getdate(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return GridView.builder(
+                primary: false,
+                padding: const EdgeInsets.all(20),
+                itemCount: snapshot.data.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 4.0),
+                itemBuilder: (BuildContext context, int index) {
+                  return MyCard(
+                    title: snapshot.data[index].category,
+                    micon: snapshot.data[index].icon,
+                  );
+                },
               );
-            },
-          )
-        ],
-      ),
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 }
@@ -75,8 +82,7 @@ class MyCard extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => ChildEducation(title)),
+              MaterialPageRoute(builder: (context) => ChildEducation(title)),
             );
           },
           child: Padding(

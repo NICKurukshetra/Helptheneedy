@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:android_intent/android_intent.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_application_2/main.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
@@ -160,7 +161,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   location() async {
     var p = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
+        desiredAccuracy: LocationAccuracy.high);
     setState(() {
       lat = p.latitude.toString();
       lng = p.longitude.toString();
@@ -418,28 +419,34 @@ class MyCustomFormState extends State<MyCustomForm> {
 
                         try {
                           NeedyData users = NeedyData(
+                              srno: 0,
                               requestby: _uname,
-                              requestmob: _usermobile,
+                              requestMob: _usermobile,
                               category: _cat,
                               age: _selectedAge,
                               sex: _category,
                               remarks: myRemarksController.text,
                               imgurl: fileurl,
-                              lat: lat,
-                              longit: lng,
+                              latitude: lat,
+                              longitude: lng,
                               mediatype: mediatype,
                               status: 'Open');
-                          showSnack(context, "Processing Data..");
+                          //showSnack(context, "Processing Data..");
                           var res = await APIServices.postNeedyData(users)
-                              .whenComplete(() => null);
+                              .whenComplete(() => Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomePage()),
+                                  ));
 
-                          if (res.toString() == "1") {
+                          if (res.toString() == '1') {
                             showdg(context, "Success", "Request Submitted");
                           }
                         } on Exception catch (exception) {
-                          print(exception);
+                          showdg(context, "Error", exception.toString());
                         } catch (exception) {
                           print(exception);
+                          showdg(context, "Error", exception.toString());
                         }
                       }
                     }
@@ -478,6 +485,26 @@ class MyCustomFormState extends State<MyCustomForm> {
       }
     }
   }
+
+  // Upload(File imageFile) async {
+  //   var stream =
+  //       new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+  //   var length = await imageFile.length();
+
+  //   var uri = Uri.parse(uploadURL);
+
+  //   var request = new http.MultipartRequest("POST", uri);
+  //   var multipartFile = new http.MultipartFile('file', stream, length,
+  //       filename: basename(imageFile.path));
+  //   //contentType: new MediaType('image', 'png'));
+
+  //   request.files.add(multipartFile);
+  //   var response = await request.send();
+  //   print(response.statusCode);
+  //   response.stream.transform(utf8.decoder).listen((value) {
+  //     print(value);
+  //   });
+  // }
 
 /*Check if gps service is enabled or not*/
   Future _gpsService() async {

@@ -14,34 +14,27 @@ class MyHome extends StatelessWidget {
       return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Splash(),
-          themeMode: appState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
           darkTheme: ThemeData(
-            backgroundColor: Colors.grey[300],
-            brightness: Brightness.dark,
-            elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateColor.resolveWith(
-                        (states) => Colors.grey))),
-          ),
-          /* darkTheme: ThemeData(
             primaryColor: Colors.black,
             backgroundColor: Colors.black,
             indicatorColor: Color(0xff0E1D36),
             buttonColor: Color(0xff3B3B3B),
-          ), */
+          ),
           theme: ThemeData(
-            scaffoldBackgroundColor: Colors.grey[300],
+            tabBarTheme: TabBarTheme(
+                overlayColor:
+                    MaterialStateColor.resolveWith((states) => Colors.teal)),
             // Define the default brightness and colors.
-
+            colorScheme: ColorScheme.light(
+                primary: Colors.teal, secondary: Colors.white),
             iconTheme: IconThemeData(color: Colors.teal),
-
+            primaryColorLight: Colors.teal,
             elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ButtonStyle(
                     backgroundColor: MaterialStateColor.resolveWith(
                         (states) => Colors.teal))),
             primaryColor: Colors.teal[400],
-            accentColor: Colors.grey,
-            accentColorBrightness: Brightness.dark,
+
             applyElevationOverlayColor: true,
 
             // Define the default font family.
@@ -49,11 +42,11 @@ class MyHome extends StatelessWidget {
 
             // Define the default TextTheme. Use this to specify the default
             // text styling for headlines, titles, bodies of text, and more.
-            textTheme: TextTheme(
-              headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-              headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-              bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-            ),
+            // textTheme: TextTheme(
+            //   headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+            //   headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+            //   bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+            // ),
           ));
     });
   }
@@ -131,13 +124,25 @@ class _SplashState extends State<Splash> {
                 Padding(
                     padding: EdgeInsets.only(top: 30),
                     child: Image.asset(
-                      "assets/niclogo.png",
-                      width: 150,
+                      "assets/hrgov.png",
+                      width: 70,
                     )),
-                Padding(padding: EdgeInsets.only(top: 10)),
-                Text(
-                  "Designed & Developed by NIC Kurukshetra",
-                  style: TextStyle(color: Colors.white),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Image.asset(
+                    "assets/niclogo.png",
+                    width: 80,
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(10)),
+                Center(
+                  child: Text(
+                    "Supported by District Administration Kurukshetra \n& Developed by NIC Kurukshetra",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 )
               ],
             ))));

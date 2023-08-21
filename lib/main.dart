@@ -3,14 +3,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/AppStateNotifier.dart';
+import 'package:flutter_application_2/models/NgoAction.dart';
 import 'package:flutter_application_2/ui/AboutUs.dart';
 import 'package:flutter_application_2/ui/Associates.dart';
+import 'package:flutter_application_2/ui/Disclaimer.dart';
 
 import 'package:flutter_application_2/ui/Latest.dart';
+import 'package:flutter_application_2/ui/LatestNGO.dart';
 import 'package:flutter_application_2/ui/splash.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'firbase_option.dart';
 
 import 'ui/Needy.dart';
 import 'ui/PressRelease.dart';
@@ -26,7 +29,7 @@ import 'ui/loginscreen.dart';
 String _username;
 String _useremail;
 String _userphotourl;
-
+String _usertype;
 bool isSwitched;
 var textValue = 'Switch is OFF';
 
@@ -43,22 +46,52 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 }
 
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description: 'This channel is used for important notifications.',
+  // description
+  importance: Importance.max,
+);
+
 FirebaseMessaging messaging;
+List<String> _value;
 void main() async {
   //await init();
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-   
-  );
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  await Firebase.initializeApp();
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
+  FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true, badge: true, sound: true);
 
-    if (message.notification != null) {
-      print('Message also contained a notification: ${message.notification}');
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    RemoteNotification notification = message.notification;
+    AndroidNotification android = message.notification?.android;
+
+    // If `onMessage` is triggered with a notification, construct our own
+    // local notification to show to users using the created channel.
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id, channel.name,
+              icon: android?.smallIcon,
+              // other properties...
+            ),
+          ));
     }
   });
   runApp(
@@ -91,14 +124,10 @@ class _HomePageState extends State<HomePage>
       "Welcome to Help the Needy App, Install the app for helping the needy from : https://play.google.com/store/apps/details?id=com.help.theneedy";
   @override
   void initState() {
-    
-
     setuser();
 
     super.initState();
   }
-
-  
 
   @override
   void dispose() {
@@ -213,17 +242,35 @@ class _HomePageState extends State<HomePage>
                 },
               ),
               ListTile(
-                title: Text('Press Release'),
+                title: Text('Disclaimer'),
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PressRelease()),
+                    MaterialPageRoute(builder: (context) => Disclaimer()),
                   );
+                },
+              ),
+              // ListTile(
+              //   title: Text('Press Release'),
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => PressRelease()),
+              //     );
 
-                  // Update the state of the app
-                  // ...
-                  // Then close the drawer
-                  // Navigator.pop(context);
+              //     // Update the state of the app
+              //     // ...
+              //     // Then close the drawer
+              //     // Navigator.pop(context);
+              //   },
+              // ),
+              ListTile(
+                title: Text('NGO Contact'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Associates(true)),
+                  );
                 },
               ),
               ListTile(
@@ -276,6 +323,11 @@ class _HomePageState extends State<HomePage>
                 onTap: () async {
                   SharedPreferences preferences =
                       await SharedPreferences.getInstance();
+                  _value = preferences.getStringList("topic");
+                  if (_value != null) {
+                    unsubscribeToTopic();
+                  }
+
                   await preferences.clear();
 
                   Navigator.pushReplacement(
@@ -322,7 +374,7 @@ class _HomePageState extends State<HomePage>
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => Disclaimer()),
                   );
                 },
               ),
@@ -330,7 +382,9 @@ class _HomePageState extends State<HomePage>
           ),
         ),
         body: TabBarView(
-          children: [Camera(), Needy(), Latest(), Associates()],
+          children: _usertype == "NGO"
+              ? [Camera(), Needy(), Latest(), LatestNGO()]
+              : [Camera(), Needy(), Latest(), Associates(false)],
           controller: _tabController,
         ),
       ),
@@ -345,6 +399,7 @@ class _HomePageState extends State<HomePage>
         _username = prefs.getString("username");
         _useremail = prefs.getString("useremail");
         _userphotourl = prefs.getString("userphotourl");
+        _usertype = prefs.getString("usertype");
       });
     }
   }
@@ -397,4 +452,10 @@ void showdg(BuildContext context, String title, String message) {
       ],
     ),
   );
+}
+
+Future<void> unsubscribeToTopic() async {
+  for (var element in _value) {
+    var res = await FirebaseMessaging.instance.unsubscribeFromTopic(element);
+  }
 }

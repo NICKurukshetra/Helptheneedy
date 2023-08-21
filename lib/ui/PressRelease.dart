@@ -20,14 +20,14 @@ class PressRelease extends StatelessWidget {
                   //alignment: Alignment.center,
                 ),
               ),
-              Card(
-                elevation: 10,
-                child: Image.asset(
-                  'assets/PR2.jpeg',
-                  //fit: BoxFit.cover,
-                  //alignment: Alignment.center,
-                ),
-              ),
+              // Card(
+              //   elevation: 10,
+              //   child: Image.asset(
+              //     'assets/PR2.jpeg',
+              //     //fit: BoxFit.cover,
+              //     //alignment: Alignment.center,
+              //   ),
+              // ),
             ])
           ],
         ));

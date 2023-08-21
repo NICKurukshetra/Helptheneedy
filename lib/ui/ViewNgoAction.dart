@@ -41,9 +41,11 @@ class _NgoActionState extends State<NgoAction> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("Action : " +
-                                  snapshot.data[index].action +
+                                  snapshot.data[index].ngoaction1 +
                                   ' Dated ' +
-                                  snapshot.data[index].dated),
+                                  snapshot.data[index].dated
+                                      .toString()
+                                      .substring(0, 16)),
                               snapshot.data[index].remarks != null
                                   ? Text("Remarks : " +
                                       snapshot.data[index].remarks)
@@ -69,10 +71,10 @@ List<Ngo> parseData(String responseBody) {
 Future<List<Ngo>> _getNeedys(String id) async {
   try {
     {
-      final response = await APIServices.fetchNGoData(id);
+      var response = await APIServices.fetchNGoData(id);
       //Iterable list = json.decode(response.body);
       //needy = list.map((model) => NeedyData.fromJson(model)).toList();
-      return compute(parseData, response.body);
+      return response;
     }
   } catch (e) {}
 }

@@ -1,56 +1,59 @@
+// To parse this JSON data, do
+//
+//     final users = usersFromJson(jsonString);
+
+import 'dart:convert';
+
+List<Users> usersFromJson(String str) =>
+    List<Users>.from(json.decode(str).map((x) => Users.fromJson(x)));
+
+String usersToJson(List<Users> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 class Users {
-  // final int id;
-  final String name;
-  final String email;
-  final String mobile;
-  final String photourl;
-  final String type;
-  final String cat;
-  final String ngoname;
+  Users({
+    this.srno,
+    this.name,
+    this.email,
+    this.mobile,
+    this.photourl,
+    this.type,
+    this.cat,
+    this.ngoname,
+    this.approve,
+  });
 
-  Users(
-      {this.name,
-      this.email,
-      this.mobile,
-      this.photourl,
-      this.type,
-      this.cat,
-      this.ngoname});
+  int srno;
+  String name;
+  String email;
+  String mobile;
+  String photourl;
+  String type;
+  String cat;
+  String ngoname;
+  dynamic approve;
 
-  //factory Users.fromJson(Map<String, dynamic> json) => Users.fromJson(json);
-  /* : firstName= json['firstName'],
-        lastName= json['lastName'],
-        dob= json['dob'],
-        gender= json['gender'];  */
+  factory Users.fromJson(Map<String, dynamic> json) => Users(
+        srno: json["srno"],
+        name: json["name"],
+        email: json["email"],
+        mobile: json["mobile"],
+        photourl: json["photourl"],
+        type: json["type"],
+        cat: json["cat"],
+        ngoname: json["ngoname"],
+        approve: json["approve"],
+      );
 
-  Map<String, dynamic> toJson() => _$UsersToJson(this);
-  /*   {
-     // 'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'dob': dob,
-      'gender': gender
-    };
-  */
-
-  factory Users.fromJson(Map<String, dynamic> json) {
-    return Users(
-        name: json['Name'] as String,
-        email: json['lastName'] as String,
-        mobile: json['dob'] as String,
-        photourl: json['gender'] as String,
-        type: json['gender'] as String,
-        cat: json['cat'] as String,
-        ngoname: json['ngoname'] as String);
-  }
-
-  Map<String, dynamic> _$UsersToJson(Users instance) => <String, dynamic>{
-        'Name': instance.name,
-        'Email': instance.email,
-        'Mobile': instance.mobile,
-        'Photourl': instance.photourl,
-        'Type': instance.type,
-        'cat': instance.cat,
-        'ngoname': instance.ngoname
+  Map<String, dynamic> toJson() => {
+        "srno": srno,
+        "name": name,
+        "email": email,
+        "mobile": mobile,
+        "photourl": photourl,
+        "type": type,
+        "cat": cat,
+        "ngoname": ngoname,
+        "approve": approve,
       };
 }

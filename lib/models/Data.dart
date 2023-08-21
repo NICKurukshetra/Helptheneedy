@@ -1,79 +1,73 @@
+// To parse this JSON data, do
+//
+//     final needyData = needyDataFromJson(jsonString);
+
+import 'dart:convert';
+
+List<NeedyData> needyDataFromJson(String str) => List<NeedyData>.from(json.decode(str).map((x) => NeedyData.fromJson(x)));
+
+String needyDataToJson(List<NeedyData> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 class NeedyData {
-  final int id;
-  final String category;
-  final String remarks;
-  final String requestmob;
-  final String requestby;
-  final String sex;
-  final String age;
-  final String imgurl;
-  final String lat;
-  final String longit;
-  final String status;
-  final String mediatype;
+    NeedyData({
+        this.srno,
+        this.category,
+        this.remarks,
+        this.requestMob,
+        this.requestby,
+        this.sex,
+        this.age,
+        this.imgurl,
+        this.latitude,
+        this.longitude,
+        this.status,
+        this.mediatype,
+        this.dated,
+    });
 
-  final String dated;
+    int srno;
+    String category;
+    String remarks;
+    String requestMob;
+    String requestby;
+    String sex;
+    String age;
+    String imgurl;
+    String latitude;
+    String longitude;
+    String status;
+    String mediatype;
+    String dated;
 
-  NeedyData(
-      {this.id,
-      this.category,
-      this.remarks,
-      this.requestmob,
-      this.requestby,
-      this.sex,
-      this.age,
-      this.imgurl,
-      this.lat,
-      this.longit,
-      this.status,
-      this.mediatype,
-      this.dated});
-
-  //factory Users.fromJson(Map<String, dynamic> json) => Users.fromJson(json);
-  /* : firstName= json['firstName'],
-        lastName= json['lastName'],
-        dob= json['dob'],
-        gender= json['gender'];  */
-
-  Map<String, dynamic> toJson() => _$UsersToJson(this);
-  /*   {
-     // 'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'dob': dob,
-      'gender': gender
-    };
-  */
-
-  factory NeedyData.fromJson(Map<String, dynamic> json) {
-    return NeedyData(
-      id: json['srno'] as int,
-      category: json['category'] as String,
-      remarks: json['remarks'] as String,
-      requestmob: json['requestmob'] as String,
-      requestby: json['requestby'] as String,
-      sex: json['sex'] as String,
-      age: json['age'] as String,
-      imgurl: json['imgurl'] as String,
-      lat: json['latitude'] as String,
-      longit: json['longitude'] as String,
-      status: json['status'] as String,
-      mediatype: json['mediatype'] as String,
-      dated: json['dated'] as String,
+    factory NeedyData.fromJson(Map<String, dynamic> json) => NeedyData(
+        srno: json["srno"],
+        category: json["category"],
+        remarks: json["remarks"],
+        requestMob: json["requestMob"],
+        requestby: json["requestby"],
+        sex: json["sex"],
+        age: json["age"],
+        imgurl: json["imgurl"],
+        latitude: json["latitude"],
+        longitude: json["longitude"],
+        status: json["status"],
+        mediatype: json["mediatype"],
+        dated: json["dated"],
     );
-  }
 
-  Map<String, dynamic> _$UsersToJson(NeedyData instance) => <String, dynamic>{
-        'Category': instance.category,
-        'Remarks': instance.remarks,
-        'Requestmob': instance.requestmob,
-        'Requestby': instance.requestby,
-        'Sex': instance.sex,
-        'Age': instance.age,
-        'Imgurl': instance.imgurl,
-        'latitude': instance.lat,
-        'longitude': instance.longit,
-        'Status': instance.status,
-        'mediatype': instance.mediatype
-      };
+    Map<String, dynamic> toJson() => {
+        "srno": srno,
+        "category": category,
+        "remarks": remarks,
+        "requestMob": requestMob,
+        "requestby": requestby,
+        "sex": sex,
+        "age": age,
+        "imgurl": imgurl,
+        "latitude": latitude,
+        "longitude": longitude,
+        "status": status,
+        "mediatype": mediatype,
+        "dated": dated,
+    };
 }

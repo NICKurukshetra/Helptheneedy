@@ -22,7 +22,7 @@ class _LatestState extends State<Latest> {
   @override
   void initState() {
     super.initState();
-    getCat();
+    //getCat();
     _getNeedys();
   }
 
@@ -31,8 +31,8 @@ class _LatestState extends State<Latest> {
     var v = prefs.getString("usertype");
     if (v == "NGO") {
       _childval.clear();
-      
-     var l= prefs.getStringList("cat");
+
+      var l = prefs.getStringList("cat");
       setState(() {
         _childval = (prefs.getStringList("cat"));
       });
@@ -43,47 +43,45 @@ class _LatestState extends State<Latest> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(children: [
-      Row(
-        children: [
-          Expanded(
-              child: Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
-                  child: InputDecorator(
-                    decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        labelText: "Select Category",
-                        errorStyle:
-                            TextStyle(color: Colors.redAccent, fontSize: 12.0),
-                        hintText: 'Please select',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20))),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                          autofocus: true,
-                          isDense: true,
-                          onChanged: (String newValue) {
-                            setState(() {
-                              _value = newValue;
-                              _LatestState().build(context);
-                            });
-                          },
-                          value: _value,
-                          items: _childval.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: new Text(value),
-                            );
-                          }).toList()),
-                    ),
-                  ))),
-        ],
-      ),
+      // Row(
+      //   children: [
+      //     Expanded(
+      //         child: Padding(
+      //             padding:
+      //                 EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
+      //             child: InputDecorator(
+      //               decoration: InputDecoration(
+      //                   floatingLabelBehavior: FloatingLabelBehavior.auto,
+      //                   labelText: "Select Category",
+      //                   errorStyle:
+      //                       TextStyle(color: Colors.redAccent, fontSize: 12.0),
+      //                   hintText: 'Please select',
+      //                   border: OutlineInputBorder(
+      //                       borderRadius: BorderRadius.circular(20))),
+      //               child: DropdownButtonHideUnderline(
+      //                 child: DropdownButton<String>(
+      //                     autofocus: true,
+      //                     isDense: true,
+      //                     onChanged: (String newValue) {
+      //                       setState(() {
+      //                         _value = newValue;
+      //                         _LatestState().build(context);
+      //                       });
+      //                     },
+      //                     value: _value,
+      //                     items: _childval.map((String value) {
+      //                       return DropdownMenuItem<String>(
+      //                         value: value,
+      //                         child: new Text(value),
+      //                       );
+      //                     }).toList()),
+      //               ),
+      //             ))),
+      //   ],
+      // ),
       Expanded(
           child: FutureBuilder<List<NeedyData>>(
-        future: _value == ("ALL") || _value == null
-            ? _getNeedys()
-            : _getCatNeedys(_value),
+        future: _getNeedys(),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
@@ -92,21 +90,28 @@ class _LatestState extends State<Latest> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         return Card(
+                            margin: EdgeInsets.only(top: 20, left: 5),
                             elevation: 8,
                             child: ListTile(
-                                enableFeedback: true,
-                                leading: CircleAvatar(
-                                  radius: 20.0,
-                                  child: snapshot.data[index].mediatype == 'I'
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          child: Image.network(
-                                            snapshot.data[index].imgurl,
-                                          ))
-                                      : Icon((Icons.play_circle_fill_rounded)),
-                                  backgroundColor: Colors.white38,
+                                leading: Text(
+                                  index.toString() + ")",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
+                                enableFeedback: true,
+                                // leading: CircleAvatar(
+                                //   radius: 20.0,
+                                //   child: snapshot.data[index].mediatype == 'I'
+                                //       ? ClipRRect(
+                                //           borderRadius:
+                                //               BorderRadius.circular(5.0),
+                                //           child: Image.network(
+                                //             snapshot.data[index].imgurl,
+                                //           ))
+                                //       : Icon((Icons.play_circle_fill_rounded)),
+                                //   backgroundColor: Colors.white38,
+                                // ),
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -123,6 +128,12 @@ class _LatestState extends State<Latest> {
                                     ),
                                   ],
                                 ),
+                                tileColor: setCol(snapshot.data[index].status),
+
+                                // trailing:
+                                //     ? Icon(Icons.add_task_outlined,
+                                //         color: Color.fromARGB(255, 197, 84, 74))
+                                //     : null,
                                 subtitle: Wrap(children: <Widget>[
                                   Text(
                                     "Remarks: " + snapshot.data[index].remarks,
@@ -131,12 +142,12 @@ class _LatestState extends State<Latest> {
                                   )
                                 ]),
                                 onTap: () {
-                                  if (snapshot.data[index].id != null) {
+                                  if (snapshot.data[index].srno != null) {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => ViewRequest(
-                                              snapshot.data[index].id
+                                              snapshot.data[index].srno
                                                   .toString(),
                                               snapshot.data[index].remarks,
                                               snapshot.data[index].age,
@@ -144,11 +155,13 @@ class _LatestState extends State<Latest> {
                                               snapshot.data[index].dated
                                                   .toString(),
                                               snapshot.data[index].imgurl,
-                                              snapshot.data[index].lat,
-                                              snapshot.data[index].longit,
+                                              snapshot.data[index].latitude,
+                                              snapshot.data[index].longitude,
                                               snapshot.data[index].sex,
                                               snapshot.data[index].status,
-                                              snapshot.data[index].mediatype),
+                                              snapshot.data[index].mediatype,
+                                              false,
+                                              snapshot.data[index].requestMob),
                                         ));
                                   }
                                 }));
@@ -176,6 +189,16 @@ Future<List<NeedyData>> _getNeedys() async {
       return compute(parseData, response.body);
     }
   } catch (e) {}
+}
+
+Color setCol(String s) {
+  if (s == 'Short List') {
+    return Colors.yellow[100];
+  } else if (s == 'Resolved') {
+    return Colors.greenAccent[100];
+  } else if (s == 'Open') {
+    return Colors.red[100];
+  }
 }
 
 Future<List<NeedyData>> _getCatNeedys(String cat) async {

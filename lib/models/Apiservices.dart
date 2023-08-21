@@ -9,20 +9,39 @@ import 'dart:convert';
 import 'CatMas.dart';
 
 class APIServices {
-  static Future fetchUsers() async {
-    return await http
-        .get(Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Registration'));
+  static Future<List<Users>> fetchUsers() async {
+    var res = await http
+        .get(Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/Registration'));
+    return usersFromJson(res.body);
+  }
+
+  static Future<List<Users>> fetchUsersbyMob(String mob) async {
+    var res = await http.get(Uri.parse(
+        'http://103.87.24.58/HelpTheNeedyAPI/api/Registration/' + mob));
+    return usersFromJson(res.body);
+  }
+
+  static Future fetchNGOCat() async {
+    var res = await http
+        .get(Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/NGOList'));
+    return res.body;
+  }
+
+  static Future fetchNGOlist(String cat) async {
+    var res = await http.get(
+        Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/NGOList/' + cat));
+    return res.body;
   }
 
   static Future fetchUsersid(String id) async {
-    return await http.get(
-        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Registration/' + id));
+    return await http.get(Uri.parse(
+        'http://103.87.24.58/HelpTheNeedyAPI/api/Registration/' + id));
   }
 
   static Future<List<CatMas>> fetchCat() async {
     try {
       var response = await http
-          .get(Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Category'));
+          .get(Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/Category'));
       if (response.statusCode == 200) {
         // final List<User> user = userFromJson(response.body);
         // return user;
@@ -41,24 +60,25 @@ class APIServices {
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
+
     var myUsers = users.toJson();
     var usersBody = json.encode(myUsers);
     var res = await http.post(
-        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Registration'),
+        Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/Registration'),
         headers: header,
         body: usersBody);
-    print(res);
+    print(res.body);
     return res.statusCode;
   }
 
   static Future<http.Response> fetchNeedyDataCat(String id) async {
     return await http
-        .get(Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Data/' + id));
+        .get(Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/Data/' + id));
   }
 
   static Future<http.Response> fetchNeedyData() async {
     return await http
-        .get(Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Data'));
+        .get(Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/Data'));
   }
 
   static Future postNeedyData(NeedyData users) async {
@@ -69,16 +89,18 @@ class APIServices {
     var myUsers = users.toJson();
     var usersBody = json.encode(myUsers);
     var res = await http.post(
-        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Data'),
+        Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/Data'),
         headers: header,
         body: usersBody);
     print(res.body);
     return res.body;
   }
 
-  static Future<http.Response> fetchNGoData(String id) async {
-    return await http.get(
-        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/NgoAction/' + id));
+  static Future<List<Ngo>> fetchNGoData(String id) async {
+    print(id);
+    var res = await http.get(
+        Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/NgoAction/' + id));
+    return ngoFromJson(res.body);
   }
 
   static Future postNGoData(Ngo users) async {
@@ -89,10 +111,10 @@ class APIServices {
     var myUsers = users.toJson();
     var usersBody = json.encode(myUsers);
     var res = await http.post(
-        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/NgoAction'),
+        Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/NgoAction'),
         headers: header,
         body: usersBody);
-    print(res.statusCode);
+    print(res.body);
     return res.statusCode;
   }
 
@@ -104,7 +126,7 @@ class APIServices {
     var myUsers = users.toJson();
     var usersBody = json.encode(myUsers);
     var res = await http.post(
-        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Feedback'),
+        Uri.parse('http://103.87.24.58/HelpTheNeedyAPI/api/Feedback'),
         headers: header,
         body: usersBody);
     print(res.statusCode);

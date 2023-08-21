@@ -1,10 +1,52 @@
-import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'dart:convert';
+import 'dart:ffi';
 
-class Associates extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_application_2/models/Ngo.dart';
+
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
+import '../models/Apiservices.dart';
+
+Bool vis;
+
+class Associates extends StatefulWidget {
+  final bool val;
+  Associates(this.val);
+
+  @override
+  State<Associates> createState() => _AssociatesState();
+}
+
+class _AssociatesState extends State<Associates> {
   @override
   // ignore: override_on_non_overriding_member
+
+  List<String> catStringFromJson(String str) =>
+      List<String>.from(json.decode(str).map((x) => x));
+
+  String catStringToJson(List<String> data) =>
+      json.encode(List<dynamic>.from(data.map((x) => x)));
+
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
+  Future<List<String>> getdata() async {
+    var futuredata = await APIServices.fetchNGOCat();
+
+    return catStringFromJson(futuredata);
+  }
+
+  Future<List<NgoList>> getNGO(String cat) async {
+    var futuredata = await APIServices.fetchNGOlist(cat);
+
+    return ngoListFromJson(futuredata);
+  }
+
   void launchemergency({
     @required int phone,
     @required String message,
@@ -22,460 +64,96 @@ class Associates extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: [
-      Card(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            Divider(
-              color: Colors.grey,
-            ),
-            ExpansionTile(
-              leading: Icon(
-                Icons.home,
-                size: 50,
-              ),
-              title: Text("Shelter Home"),
-              children: <Widget>[
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://9355332211"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Shree Sanatan Vidyapeeth Trust"),
-                  //subtitle: Text("Donate Blood"),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://9812089840"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Midway House"),
-                  // subtitle: Text("Donate Cloths, Footwear, Bag etc"),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://9416730940"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Prarna Vridha Ashram"),
-                  //    subtitle: Text("For Children"),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://8818000024"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Haryana Navyugkala Sangam Vridha Ashram"),
-                  //subtitle: Text("Human Rights"),
-                  onTap: () {},
-                  /* onTap: () {
-                        Navigator.pop(context);
-                      },*/
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://9416734007"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Baba Bansi Wala Vridha Ashram"),
-                  //subtitle: Text("Human Rights"),
-                  onTap: () {},
-                  /* onTap: () {
-                        Navigator.pop(context);
-                      },*/
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://9896042142"),
-                      ),
-                    ],
-                  ),
-                  title: Text(
-                      "Dainik Vridha Dekhbhal kendra mook avam badhir school "),
-                  //subtitle: Text("Human Rights"),
-                  onTap: () {},
-                  /* onTap: () {
-                        Navigator.pop(context);
-                      },*/
-                ),
-              ],
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-            ExpansionTile(
-              leading: Icon(
-                MdiIcons.humanChild,
-                size: 50,
-              ),
-              title: Text("Labour/Missing Child"),
-              children: <Widget>[
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://8053130007"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Jiwan Me Vishwas Bal Ashram, Ladwa"),
-                  //subtitle: Text("Donate Blood"),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://8168322245"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Udayan Care, Kurykshetra"),
-                  // subtitle: Text("Donate Cloths, Footwear, Bag etc"),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://9518185606"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Vishwas Baal Ashram Shahabad"),
-                  //    subtitle: Text("For Children"),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://7988881471"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Open Shelter  Home, Kurukshetra"),
-                  //subtitle: Text("Human Rights"),
-                  onTap: () {},
-                  /* onTap: () {
-                        Navigator.pop(context);
-                      },*/
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://9416700220"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Vatsalya Vatika, Truest"),
-                  //subtitle: Text("Human Rights"),
-                  onTap: () {},
-                  /* onTap: () {
-                        Navigator.pop(context);
-                      },*/
-                ),
-              ],
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-            ExpansionTile(
-              leading: Icon(
-                Icons.water_damage,
-                size: 50,
-              ),
-              title: Text("Blood Banks"),
-              children: <Widget>[
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://01744220335"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Red Cross Kurukshetra"),
-                  //subtitle: Text("Donate Blood"),
-                ),
-              ],
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-            ExpansionTile(
-              leading: Icon(
-                Icons.local_hospital_outlined,
-                size: 55,
-              ),
-              title: Text("Accident Help Centers"),
-              children: <Widget>[
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://"),
-                      ),
-                    ],
-                  ),
-                  title: Text(""),
-                  //subtitle: Text("Donate Blood"),
-                ),
-              ],
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-            ExpansionTile(
-              leading: Icon(
-                MdiIcons.bottleWineOutline,
-                size: 50,
-              ),
-              title: Text("De Addiction Centers"),
-              children: <Widget>[
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://"),
-                      ),
-                    ],
-                  ),
-                  title: Text(""),
-                  //subtitle: Text("Donate Blood"),
-                ),
-              ],
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-            ExpansionTile(
-              leading: Icon(
-                MdiIcons.library,
-                size: 50,
-              ),
-              title: Text("Child Educations"),
-              children: <Widget>[
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://"),
-                      ),
-                    ],
-                  ),
-                  title: Text(""),
-                  //subtitle: Text("Donate Blood"),
-                ),
-              ],
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-            ExpansionTile(
-              leading: Icon(
-                MdiIcons.tshirtCrew,
-                size: 50,
-              ),
-              title: Text("Donation"),
-              children: <Widget>[
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://"),
-                      ),
-                    ],
-                  ),
-                  title: Text(""),
-                  //subtitle: Text("Donate Blood"),
-                ),
-              ],
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-            ExpansionTile(
-              leading: Icon(
-                (MdiIcons.dogSide),
-                //Icons.ac_unit_sharp,
+        appBar: widget.val == true ? AppBar(title: Text("List of NGO")) : null,
+        body: Card(
+          child: FutureBuilder<List<String>>(
+              future: getdata(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                      // Important: Remove any padding from the ListView.
+                      //shrinkWrap: true,
+                      itemCount: snapshot.data.length,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        return Column(children: <Widget>[
+                          ExpansionTile(
+                            leading: Icon(
+                              Icons.add_circle_outline,
+                              size: 30,
+                            ),
+                            title: Text(snapshot.data[index]),
+                            children: <Widget>[
+                              Divider(
+                                color: Colors.grey,
+                              ),
+                              FutureBuilder<List<NgoList>>(
+                                  future: getNGO(snapshot.data[index]),
+                                  builder: (context, snapshot1) {
+                                    if (snapshot1.hasData) {
+                                      return ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: snapshot1.data.length,
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              trailing: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.call,
+                                                      color: Colors.blue[900],
+                                                    ),
+                                                    onPressed: () =>
+                                                        launchUrlString(
+                                                            "tel://" +
+                                                                snapshot1
+                                                                    .data[index]
+                                                                    .tel),
+                                                  ),
+                                                ],
+                                              ),
 
-                size: 50,
-              ),
-              title: Text("Deceased Animal Care Centers"),
-              children: <Widget>[
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.blue[900],
-                        ),
-                        onPressed: () => launch("tel://"),
-                      ),
-                    ],
-                  ),
-                  title: Text(""),
-                  //subtitle: Text("Donate Blood"),
-                ),
-              ],
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-          ],
-        ),
-      )
-    ]));
+                                              subtitle: snapshot1
+                                                          .data[index].fbaccount
+                                                          .toString()
+                                                          .length >
+                                                      5
+                                                  ? Row(
+                                                      children: [
+                                                        IconButton(
+                                                            onPressed: () =>
+                                                                launchUrlString(
+                                                                    snapshot1
+                                                                        .data[
+                                                                            index]
+                                                                        .fbaccount),
+                                                            icon: Icon(
+                                                              Icons.link,
+                                                              color: Colors
+                                                                  .blue[900],
+                                                            ))
+                                                      ],
+                                                    )
+                                                  : null,
+
+                                              title: Text(
+                                                  snapshot1.data[index].ngo),
+                                              //subtitle: Text("Donate Blood"),
+                                            );
+                                          });
+                                    } else {
+                                      return CircularProgressIndicator();
+                                    }
+                                  })
+                            ],
+                          ),
+                        ]);
+                      });
+                } else {
+                  return CircularProgressIndicator();
+                }
+              }),
+        ));
   }
 }

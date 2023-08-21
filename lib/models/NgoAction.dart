@@ -1,27 +1,51 @@
+// To parse this JSON data, do
+//
+//     final ngo = ngoFromJson(jsonString);
+
+import 'dart:convert';
+
+List<Ngo> ngoFromJson(String str) =>
+    List<Ngo>.from(json.decode(str).map((x) => Ngo.fromJson(x)));
+
+String ngoToJson(List<Ngo> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 class Ngo {
-  final String ngo;
-  final String action;
-  final String remarks;
-  final String dated;
-  final int id;
-  Ngo({this.id, this.ngo, this.action, this.dated, this.remarks});
+  Ngo({
+    this.srno,
+    this.ngo,
+    this.ngoaction1,
+    this.dated,
+    this.dataid,
+    this.remarks,
+    this.ngomobile,
+  });
 
-  factory Ngo.fromJson(Map<String, dynamic> json) {
-    return Ngo(
-      id: json['id'] as int,
-      ngo: json['ngo'] as String,
-      action: json['action'] as String,
-      dated: json['dated'] as String,
-      remarks: json['remarks'] as String,
-    );
-  }
-  Map<String, dynamic> toJson() => _$NgoToJson(this);
+  int srno;
+  String ngo;
+  String ngoaction1;
+  DateTime dated;
+  int dataid;
+  String remarks;
+  String ngomobile;
 
-  Map<String, dynamic> _$NgoToJson(Ngo instance) => <String, dynamic>{
-        'id': instance.id,
-        'ngo': instance.ngo,
-        'action': instance.action,
-        'dated': instance.dated,
-        'remarks': instance.remarks,
+  factory Ngo.fromJson(Map<String, dynamic> json) => Ngo(
+        srno: json["srno"],
+        ngo: json["ngo"],
+        ngoaction1: json["ngoaction1"],
+        dated: DateTime.parse(json["dated"]),
+        dataid: json["dataid"],
+        remarks: json["remarks"],
+        ngomobile: json["ngomobile"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "srno": srno,
+        "ngo": ngo,
+        "ngoaction1": ngoaction1,
+        "dated": dated,
+        "dataid": dataid,
+        "remarks": remarks,
+        "ngomobile": ngomobile,
       };
 }

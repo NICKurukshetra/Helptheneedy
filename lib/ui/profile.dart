@@ -3,7 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter_application_2/models/Apiservices.dart';
 import 'package:flutter_application_2/models/CatMas.dart';
 import 'package:flutter_application_2/models/UsersReg.dart';
@@ -13,7 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 User _user;
 List<CatMas> convertedJsonData;
-List<String> _value;
+List<String> _value = [];
+List<String> _CatList = [];
 // var _childval = [
 //   'Child Labour',
 //   'Child Education (Dropouts)',
@@ -159,23 +160,23 @@ class MapScreenState extends State<ProfilePage> {
                                   });
                                 },
                               ),
+                              // Padding(padding: EdgeInsets.only(left: 10.0)),
+                              // Text(
+                              //   "Volunteer",
+                              //   style: TextStyle(),
+                              // ),
+                              // Radio(
+                              //   value: "VOLUNTEER",
+                              //   groupValue: _site,
+                              //   onChanged: (value) {
+                              //     setState(() {
+                              //       myreg = false;
+                              //       _site = value;
+                              //     });
+                              //   },
+                              // ),
                               Padding(padding: EdgeInsets.only(left: 10.0)),
-                              Text(
-                                "Volunteer",
-                                style: TextStyle(),
-                              ),
-                              Radio(
-                                value: "VOLUNTEER",
-                                groupValue: _site,
-                                onChanged: (value) {
-                                  setState(() {
-                                    myreg = false;
-                                    _site = value;
-                                  });
-                                },
-                              ),
-                              Padding(padding: EdgeInsets.only(left: 10.0)),
-                              Text("NGO"),
+                              Text("NGO/Volunteer"),
                               Radio(
                                 value: "NGO",
                                 groupValue: _site,
@@ -226,7 +227,7 @@ class MapScreenState extends State<ProfilePage> {
                                       _value = results;
                                     },
                                   ))
-                              : new  Container(),
+                              : new Container(),
                           myreg
                               ? Padding(
                                   padding: EdgeInsets.only(
@@ -425,7 +426,7 @@ class MapScreenState extends State<ProfilePage> {
                                       },
                                       decoration: InputDecoration(
                                           hintText:
-                                              "Enter Emergency Home Contact No",
+                                              "Enter Emergency Contact No",
                                           errorText: isEmgHomeValid
                                               ? 'Home Contact'
                                               : null),
@@ -434,55 +435,55 @@ class MapScreenState extends State<ProfilePage> {
                                   ),
                                 ],
                               )),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 25.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  new Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      new Text(
-                                        'Emergency Friend Contact No',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 2.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  new Flexible(
-                                    child: new TextField(
-                                      keyboardType: TextInputType.number,
-                                      controller: myControllerEmgFrnd,
-                                      onChanged: (value) {
-                                        if ((value.isEmpty)) {
-                                          isEmgFrndValid = true;
-                                        } else {
-                                          isEmgFrndValid = false;
-                                        }
-                                        setState(() {});
-                                      },
-                                      decoration: InputDecoration(
-                                          hintText:
-                                              "Enter Emergency Friend Contact No",
-                                          errorText: isEmgFrndValid
-                                              ? 'Friend Contact'
-                                              : null),
-                                      enabled: !_status,
-                                    ),
-                                  ),
-                                ],
-                              )),
+                          // Padding(
+                          //     padding: EdgeInsets.only(
+                          //         left: 25.0, right: 25.0, top: 25.0),
+                          //     child: new Row(
+                          //       mainAxisSize: MainAxisSize.max,
+                          //       children: <Widget>[
+                          //         new Column(
+                          //           mainAxisAlignment: MainAxisAlignment.start,
+                          //           mainAxisSize: MainAxisSize.min,
+                          //           children: <Widget>[
+                          //             new Text(
+                          //               'Emergency Friend Contact No',
+                          //               style: TextStyle(
+                          //                   fontSize: 16.0,
+                          //                   fontWeight: FontWeight.bold),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ],
+                          //     )),
+                          // Padding(
+                          //     padding: EdgeInsets.only(
+                          //         left: 25.0, right: 25.0, top: 2.0),
+                          //     child: new Row(
+                          //       mainAxisSize: MainAxisSize.max,
+                          //       children: <Widget>[
+                          //         new Flexible(
+                          //           child: new TextField(
+                          //             keyboardType: TextInputType.number,
+                          //             controller: myControllerEmgFrnd,
+                          //             onChanged: (value) {
+                          //               if ((value.isEmpty)) {
+                          //                 isEmgFrndValid = true;
+                          //               } else {
+                          //                 isEmgFrndValid = false;
+                          //               }
+                          //               setState(() {});
+                          //             },
+                          //             decoration: InputDecoration(
+                          //                 hintText:
+                          //                     "Enter Emergency Friend Contact No",
+                          //                 errorText: isEmgFrndValid
+                          //                     ? 'Friend Contact'
+                          //                     : null),
+                          //             enabled: !_status,
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     )),
                           Padding(
                             padding: EdgeInsets.only(
                                 left: 25.0, right: 25.0, top: 0.0),
@@ -501,6 +502,7 @@ class MapScreenState extends State<ProfilePage> {
                             onPressed: () async {
                               final prefs =
                                   await SharedPreferences.getInstance();
+                              getCategory();
                               //prefs.setString("userid", _user.uid);
                               prefs.setString("username", _user.displayName);
                               prefs.setString("useremail", _user.email);
@@ -508,12 +510,14 @@ class MapScreenState extends State<ProfilePage> {
                                   "usermobile", myControllerMob.text);
                               prefs.setString(
                                   "userEmgHome", myControllerEmgHome.text);
-                              prefs.setString(
-                                  "userEmgFrnd", myControllerEmgFrnd.text);
+                              // prefs.setString("userEmgFrnd", myControllerEmgFrnd.text);
                               prefs.setString("userphotourl", _user.photoURL);
                               prefs.setString("usertype", _site);
                               prefs.setString("ngoname", mycontrollerReg.text);
-                              prefs.setStringList("cat", _value);
+                              prefs.setStringList(
+                                  "cat", _value != null ? _CatList : _CatList);
+                              prefs.setStringList(
+                                  "topic", _value != null ? _value : _value);
 
                               /* final fs = FirebaseFirestore.instance;
                               await fs.collection("Registration").add({
@@ -526,12 +530,15 @@ class MapScreenState extends State<ProfilePage> {
                                 "EmgFriend": myControllerEmgFrnd.text
                               }); */
                               Users users = new Users(
+                                  srno: 0,
                                   name: _user.displayName,
                                   mobile: myControllerMob.text,
                                   email: _user.email,
                                   photourl: _user.photoURL,
                                   type: _site,
-                                  cat: _value.join(),
+                                  cat: _value != null
+                                      ? _CatList.join(",")
+                                      : _value,
                                   ngoname: mycontrollerReg.text);
 
                               var res = await APIServices.postUsers(users);
@@ -547,10 +554,6 @@ class MapScreenState extends State<ProfilePage> {
                                     builder: (context) => HomePage()),
                               );
                             },
-                            style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.purple,
-                                textStyle: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold)),
                           ))),
                 ],
               ),
@@ -561,7 +564,22 @@ class MapScreenState extends State<ProfilePage> {
 
   Future<void> subscribeToTopic() async {
     for (var element in _value) {
-     var res= await FirebaseMessaging.instance.subscribeToTopic(element);
+      var res = await FirebaseMessaging.instance.subscribeToTopic(element);
+    }
+  }
+
+  void getCategory() {
+    if (_value != null) {
+      for (var i in _value) {
+        if (convertedJsonData
+            .where((element) => element.topic == i)
+            .isNotEmpty) {
+          _CatList.add(convertedJsonData
+              .where((element) => element.topic == i)
+              .first
+              .category);
+        }
+      }
     }
   }
 
@@ -600,12 +618,12 @@ class MapScreenState extends State<ProfilePage> {
                       isEmgHomeValid = true;
                       return;
                     }
-                    if (isEmgFrndValid ||
-                        myControllerEmgFrnd.text.length < 10 ||
-                        myControllerEmgFrnd.text.length > 10) {
-                      isEmgFrndValid = true;
-                      return;
-                    }
+                    // if (isEmgFrndValid ||
+                    //     myControllerEmgFrnd.text.length < 10 ||
+                    //     myControllerEmgFrnd.text.length > 10) {
+                    //   isEmgFrndValid = true;
+                    //   return;
+                    // }
                     if (myreg == true && mycontrollerReg.text.length == 0) {
                       isRegValid = true;
                       return;

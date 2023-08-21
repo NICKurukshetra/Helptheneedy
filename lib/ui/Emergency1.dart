@@ -79,39 +79,39 @@ class _Emergency1State extends State<Emergency1> {
                       Text("$emghome", style: TextStyle(color: Colors.white)),
                   onTap: () => launch("tel:$emghome"),
                 ),
-                Divider(
-                  height: 10.0,
-                  color: Colors.black,
-                ),
-                ListTile(
-                  tileColor: Colors.pink[400],
-                  trailing: Icon(
-                    Icons.face_retouching_natural,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  leading: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.call,
-                          color: Colors.white,
-                        ),
-                        onPressed: () => launch("tel:$emgFrnd"),
-                      ),
-                    ],
-                  ),
-                  title: Text("Call Friend",
-                      style: TextStyle(color: Colors.white)),
-                  subtitle:
-                      Text("$emgFrnd", style: TextStyle(color: Colors.white)),
-                  onTap: () => launch("tel:$emgFrnd"),
-                ),
-                Divider(
-                  height: 10.0,
-                  color: Colors.black,
-                ),
+                // Divider(
+                //   height: 10.0,
+                //   color: Colors.black,
+                // ),
+                // ListTile(
+                //   tileColor: Colors.pink[400],
+                //   trailing: Icon(
+                //     Icons.face_retouching_natural,
+                //     size: 50,
+                //     color: Colors.white,
+                //   ),
+                //   leading: Row(
+                //     mainAxisSize: MainAxisSize.min,
+                //     children: <Widget>[
+                //       IconButton(
+                //         icon: Icon(
+                //           Icons.call,
+                //           color: Colors.white,
+                //         ),
+                //         onPressed: () => launch("tel:$emgFrnd"),
+                //       ),
+                //     ],
+                //   ),
+                //   title: Text("Call Friend",
+                //       style: TextStyle(color: Colors.white)),
+                //   subtitle:
+                //       Text("$emgFrnd", style: TextStyle(color: Colors.white)),
+                //   onTap: () => launch("tel:$emgFrnd"),
+                // ),
+                // Divider(
+                //   height: 10.0,
+                //   color: Colors.black,
+                // ),
                 Divider(
                   height: 10.0,
                   color: Colors.black,
