@@ -5,26 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/Apiservices.dart';
 import 'package:flutter_application_2/models/Data.dart';
 import 'package:flutter_application_2/ui/ViewRequest.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-String _id;
 String _value;
 
-var _childval = [
-  'ALL',
-  'Child Labour',
-  'Child Education (Dropouts)',
-  'Missing Child',
-  'Runaway Child',
-  'Elderly Care (at Home)',
-  'Elderly Care (Old Age Home)',
-  'Shelter Home',
-  'Injured Animal',
-  'Accident',
-  'De Addiction',
-  'Dead Animal Pickup',
-  'Donate (Clothes,Food)',
-  'Blood',
-];
+List<String> _childval = [];
 
 class Latest extends StatefulWidget {
   @override
@@ -37,7 +22,21 @@ class _LatestState extends State<Latest> {
   @override
   void initState() {
     super.initState();
+    getCat();
     _getNeedys();
+  }
+
+  Future<void> getCat() async {
+    final prefs = await SharedPreferences.getInstance();
+    var v = prefs.getString("usertype");
+    if (v == "NGO") {
+      _childval.clear();
+      
+     var l= prefs.getStringList("cat");
+      setState(() {
+        _childval = (prefs.getStringList("cat"));
+      });
+    }
   }
 
   @override

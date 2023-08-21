@@ -5,8 +5,17 @@ class Users {
   final String mobile;
   final String photourl;
   final String type;
+  final String cat;
+  final String ngoname;
 
-  Users({this.name, this.email, this.mobile, this.photourl, this.type});
+  Users(
+      {this.name,
+      this.email,
+      this.mobile,
+      this.photourl,
+      this.type,
+      this.cat,
+      this.ngoname});
 
   //factory Users.fromJson(Map<String, dynamic> json) => Users.fromJson(json);
   /* : firstName= json['firstName'],
@@ -30,7 +39,9 @@ class Users {
         email: json['lastName'] as String,
         mobile: json['dob'] as String,
         photourl: json['gender'] as String,
-        type: json['gender'] as String);
+        type: json['gender'] as String,
+        cat: json['cat'] as String,
+        ngoname: json['ngoname'] as String);
   }
 
   Map<String, dynamic> _$UsersToJson(Users instance) => <String, dynamic>{
@@ -38,6 +49,8 @@ class Users {
         'Email': instance.email,
         'Mobile': instance.mobile,
         'Photourl': instance.photourl,
-        'Type': instance.type
+        'Type': instance.type,
+        'cat': instance.cat,
+        'ngoname': instance.ngoname
       };
 }

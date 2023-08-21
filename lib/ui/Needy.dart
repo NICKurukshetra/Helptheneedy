@@ -1,108 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/models/CatMas.dart';
 import 'package:flutter_application_2/ui/ChildEducation.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class Needy extends StatelessWidget {
+import '../models/Apiservices.dart';
+
+class Needy extends StatefulWidget {
+  @override
+  State<Needy> createState() => _NeedyState();
+}
+
+List<CatMas> convertedJsonData;
+
+class _NeedyState extends State<Needy> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    APIServices.fetchCat().then((users) {
+      setState(() {
+        convertedJsonData = users;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          GridView.count(
+          GridView.builder(
             primary: false,
             padding: const EdgeInsets.all(20),
-            crossAxisSpacing: 5,
-            mainAxisSpacing: 5,
-            crossAxisCount: 3,
-            children: <Widget>[
-              MyCard(
-                title: "Shelter Home",
-                micon: MdiIcons.homeAlertOutline,
-                age: "1",
-                gender: "1",
-              ),
-              MyCard(
-                title: "Accident",
-                micon: MdiIcons.car,
-                age: "1",
-                gender: "1",
-              ),
-              MyCard(
-                title: 'Child Labour',
-                micon: MdiIcons.humanBabyChangingTable,
-                age: "2",
-                gender: "1",
-                routepage: null,
-              ),
-              MyCard(
-                title: "Child Education (Dropouts)",
-                micon: MdiIcons.library,
-                age: "2",
-                gender: "1",
-              ),
-              //Injured Animal
-
-              MyCard(
-                title: "Missing Child",
-                micon: MdiIcons.accountChildCircle,
-                age: "2",
-                gender: "1",
-              ),
-              MyCard(
-                title: "Domestic Violence",
-                micon: MdiIcons.humanFemaleFemale,
-                age: "1",
-                gender: "1",
-              ),
-              MyCard(
-                title: "Runaway Child",
-                micon: MdiIcons.runFast,
-                age: "2",
-                gender: "1",
-              ),
-              MyCard(
-                title: "Elderly Care \n (at Home)",
-                micon: MdiIcons.humanCane,
-              ),
-              MyCard(
-                title: "Elderly Care \n (Old Age Home)",
-                micon: MdiIcons.humanHandsdown,
-              ),
-
-              MyCard(
-                title: "Injured Animal",
-                micon: MdiIcons.dogService,
-                age: "0",
-                gender: "0",
-              ),
-
-              MyCard(
-                title: "De Addiction",
-                micon: MdiIcons.bottleWineOutline,
-                age: "1",
-                gender: "1",
-              ),
-
-              MyCard(
-                title: "Dead Animal Pickup",
-                micon: MdiIcons.cow,
-                age: "0",
-                gender: "0",
-              ),
-              MyCard(
-                title: "Donate (Clothes,Food)",
-                micon: MdiIcons.tshirtCrew,
-                age: "0",
-                gender: "0",
-              ),
-              MyCard(
-                title: "Blood",
-                micon: MdiIcons.waterAlertOutline,
-                age: "1",
-                gender: "1",
-              ),
-            ],
-          ),
+            itemCount: convertedJsonData.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, crossAxisSpacing: 4.0, mainAxisSpacing: 4.0),
+            itemBuilder: (BuildContext context, int index) {
+              return MyCard(
+                title: convertedJsonData[index].category,
+                micon: convertedJsonData[index].icon,
+              );
+            },
+          )
         ],
       ),
     );
@@ -118,7 +56,7 @@ class MyCard extends StatelessWidget {
     this.routepage,
   });
   final String title;
-  final IconData micon;
+  final String micon;
 
   final Widget routepage;
   final String age;
@@ -138,7 +76,7 @@ class MyCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ChildEducation(title, gender, age)),
+                  builder: (context) => ChildEducation(title)),
             );
           },
           child: Padding(
@@ -147,9 +85,9 @@ class MyCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  Image.network(
                     micon,
-                    size: 40,
+                    width: 30,
                     color: Colors.teal[500],
                   ),
                   Padding(

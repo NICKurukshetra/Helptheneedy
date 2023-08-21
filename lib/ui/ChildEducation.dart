@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:android_intent/android_intent.dart';
-
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/Apiservices.dart';
 import 'package:flutter_application_2/models/Data.dart';
@@ -11,20 +10,15 @@ import 'package:flutter_application_2/main.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 String _cat;
-bool _Age;
-bool _Gender;
-bool _child;
 
 class ChildEducation extends StatelessWidget {
-  ChildEducation(String cat, String Gender, String Age) {
+  ChildEducation(String cat) {
     _cat = cat;
-    Gender != "0" ? _Gender = true : _Gender = false;
-    Age != "0" ? _Age = true : _Age = false;
-    Age == "2" ? _child = true : _child = false;
   }
   @override
   Widget build(BuildContext context) {
@@ -64,15 +58,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   String _value;
   String objtext;
-  var _currencies = [
-    '1 to 10',
-    '10 to 20',
-    '20 to 40',
-    '40 to 60',
-    'Above 60',
-    'Not Known'
-  ];
-  var _childval = ['1 to 5', '5 to 10', '10 to 14', 'Not Known'];
+
   var fileurl;
   String lat;
   String lng;
@@ -99,6 +85,11 @@ class MyCustomFormState extends State<MyCustomForm> {
 //Changed
 
   getPermisson() async {
+    LocationPermission permission;
+
+    permission = await Geolocator.requestPermission();
+    location();
+
     await _gpsService();
   }
 
@@ -168,8 +159,8 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   location() async {
-    var p = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    var p = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low);
     setState(() {
       lat = p.latitude.toString();
       lng = p.longitude.toString();
@@ -223,104 +214,104 @@ class MyCustomFormState extends State<MyCustomForm> {
           //Padding(padding: EdgeInsets.only(left: 10.0, top: 10.0)),
           //Text("Age"),
 
-          Visibility(
-              visible: _Gender,
-              child: Padding(
-                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                  child: InputDecorator(
-                      decoration: InputDecoration(
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                          labelText: "Select Gender",
-                          errorStyle: TextStyle(
-                              color: Colors.redAccent, fontSize: 12.0),
-                          hintText: 'Please select',
-                          border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(width: 2.0, color: Colors.red),
-                              borderRadius: BorderRadius.circular(20)),
-                          focusColor: Colors.red),
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        alignment: WrapAlignment.spaceAround,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(
-                            "Male",
-                            style: TextStyle(),
-                          ),
-                          Radio(
-                            value: "Male",
-                            groupValue: _category,
-                            onChanged: (value) {
-                              setState(() {
-                                _category = value;
-                              });
-                            },
-                          ),
-                          Text("Female"),
-                          Radio(
-                            value: "Female",
-                            groupValue: _category,
-                            onChanged: (value) {
-                              setState(() {
-                                _category = value;
-                              });
-                            },
-                          ),
-                          Text("Transgender"),
-                          Radio(
-                            value: "Transgender",
-                            groupValue: _category,
-                            onChanged: (value) {
-                              setState(() {
-                                _category = value;
-                              });
-                            },
-                          )
-                        ],
-                      )))),
+          // Visibility(
+          //     visible: _Gender,
+          //     child: Padding(
+          //         padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+          //         child: InputDecorator(
+          //             decoration: InputDecoration(
+          //                 floatingLabelBehavior: FloatingLabelBehavior.never,
+          //                 labelText: "Select Gender",
+          //                 errorStyle: TextStyle(
+          //                     color: Colors.redAccent, fontSize: 12.0),
+          //                 hintText: 'Please select',
+          //                 border: OutlineInputBorder(
+          //                     borderSide:
+          //                         BorderSide(width: 2.0, color: Colors.red),
+          //                     borderRadius: BorderRadius.circular(20)),
+          //                 focusColor: Colors.red),
+          //             child: Wrap(
+          //               crossAxisAlignment: WrapCrossAlignment.center,
+          //               alignment: WrapAlignment.spaceAround,
+          //               // crossAxisAlignment: CrossAxisAlignment.center,
+          //               //mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //               children: [
+          //                 Text(
+          //                   "Male",
+          //                   style: TextStyle(),
+          //                 ),
+          //                 Radio(
+          //                   value: "Male",
+          //                   groupValue: _category,
+          //                   onChanged: (value) {
+          //                     setState(() {
+          //                       _category = value;
+          //                     });
+          //                   },
+          //                 ),
+          //                 Text("Female"),
+          //                 Radio(
+          //                   value: "Female",
+          //                   groupValue: _category,
+          //                   onChanged: (value) {
+          //                     setState(() {
+          //                       _category = value;
+          //                     });
+          //                   },
+          //                 ),
+          //                 Text("Transgender"),
+          //                 Radio(
+          //                   value: "Transgender",
+          //                   groupValue: _category,
+          //                   onChanged: (value) {
+          //                     setState(() {
+          //                       _category = value;
+          //                     });
+          //                   },
+          //                 )
+          //               ],
+          //             )))),
 
-          Visibility(
-            visible: _Gender,
-            child: Padding(
-                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                child: InputDecorator(
-                  decoration: InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      labelText: "Select Age (Year)",
-                      errorStyle:
-                          TextStyle(color: Colors.redAccent, fontSize: 12.0),
-                      hintText: 'Please select',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20))),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      autofocus: true,
-                      isDense: true,
-                      onChanged: (String newValue) {
-                        setState(() {
-                          _selectedAge = newValue;
-                        });
-                      },
-                      value: _selectedAge,
-                      items: _child
-                          ? _childval.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: new Text(value),
-                              );
-                            }).toList()
-                          : _currencies.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: new Text(value),
-                              );
-                            }).toList(),
-                    ),
-                  ),
-                )),
-          ),
+          // Visibility(
+          //   visible: _Gender,
+          //   child: Padding(
+          //       padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+          //       child: InputDecorator(
+          //         decoration: InputDecoration(
+          //             floatingLabelBehavior: FloatingLabelBehavior.auto,
+          //             labelText: "Select Age (Year)",
+          //             errorStyle:
+          //                 TextStyle(color: Colors.redAccent, fontSize: 12.0),
+          //             hintText: 'Please select',
+          //             border: OutlineInputBorder(
+          //                 borderRadius: BorderRadius.circular(20))),
+          //         child: DropdownButtonHideUnderline(
+          //           child: DropdownButton<String>(
+          //             autofocus: true,
+          //             isDense: true,
+          //             onChanged: (String newValue) {
+          //               setState(() {
+          //                 _selectedAge = newValue;
+          //               });
+          //             },
+          //             value: _selectedAge,
+          //             items: _child
+          //                 ? _childval.map((String value) {
+          //                     return DropdownMenuItem<String>(
+          //                       value: value,
+          //                       child: new Text(value),
+          //                     );
+          //                   }).toList()
+          //                 : _currencies.map((String value) {
+          //                     return DropdownMenuItem<String>(
+          //                       value: value,
+          //                       child: new Text(value),
+          //                     );
+          //                   }).toList(),
+          //           ),
+          //         ),
+          //       )),
+          // ),
           Padding(
               padding:
                   EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 10),
@@ -412,14 +403,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                     {
                       //setState(() {});
                       if (_formKey.currentState.validate() == true) {
-                        if (_Age == true && _selectedAge == null) {
-                          showSnack(context, "Select Age");
-                          return;
-                        }
-                        if (_Gender == true && _category == null) {
-                          showSnack(context, "Select Category");
-                          return;
-                        }
+                        // if (_Age == true && _selectedAge == null) {
+                        //   showSnack(context, "Select Age");
+                        //   return;
+                        // }
+                        // if (_Gender == true && _category == null) {
+                        //   showSnack(context, "Select Category");
+                        //   return;
+                        // }
                         if (fileurl == null) {
                           showSnack(context, "Upload image/videos");
                           return;
@@ -461,7 +452,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   Future _checkGps() async {
-    if (!(await Geolocator().isLocationServiceEnabled())) {
+    if (!(await Geolocator.isLocationServiceEnabled())) {
       if (Theme.of(context).platform == TargetPlatform.android) {
         showDialog(
             context: context,
@@ -471,7 +462,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 content:
                     const Text('Please make sure you enable GPS and try again'),
                 actions: <Widget>[
-                  FlatButton(
+                  ElevatedButton(
                       child: Text('Ok'),
                       onPressed: () {
                         final AndroidIntent intent = AndroidIntent(
@@ -490,7 +481,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
 /*Check if gps service is enabled or not*/
   Future _gpsService() async {
-    if (!(await Geolocator().isLocationServiceEnabled())) {
+    if (!(await Geolocator.isLocationServiceEnabled())) {
       _checkGps();
       return null;
     } else

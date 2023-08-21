@@ -1,12 +1,36 @@
+// ignore_for_file: unnecessary_statements
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_application_2/models/Apiservices.dart';
+import 'package:flutter_application_2/models/CatMas.dart';
 import 'package:flutter_application_2/models/UsersReg.dart';
 import 'package:flutter_application_2/main.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 User _user;
+List<CatMas> convertedJsonData;
+List<String> _value;
+// var _childval = [
+//   'Child Labour',
+//   'Child Education (Dropouts)',
+//   'Missing Child',
+//   'Runaway Child',
+//   'Elderly Care (at Home)',
+//   'Elderly Care (Old Age Home)',
+//   'Shelter Home',
+//   'Injured Animal',
+//   'Accident',
+//   'De Addiction',
+//   'Dead Animal Pickup',
+//   'Donate (Clothes,Food)',
+//   'Blood',
+// ];
+
+final _multiKey = GlobalKey<FormState>();
 
 class ProfilePage extends StatefulWidget {
   ProfilePage(User user) {
@@ -22,7 +46,7 @@ class MapScreenState extends State<ProfilePage> {
   bool isEmgHomeValid = false;
   bool isEmgFrndValid = false;
   bool isRegValid = false;
-  
+
   final FocusNode myFocusNode = FocusNode();
   TextEditingController mycontrollerReg = TextEditingController();
   TextEditingController myControllerName = TextEditingController();
@@ -41,6 +65,12 @@ class MapScreenState extends State<ProfilePage> {
       myControllerEmail.text = _user.email;
     }
 
+    APIServices.fetchCat().then((users) {
+      setState(() {
+        convertedJsonData = users;
+      });
+    });
+
     super.initState();
   }
 
@@ -58,7 +88,7 @@ class MapScreenState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   new Container(
-                    height: 160.0,
+                    height: 140.0,
                     color: Colors.white,
                     child: new Column(
                       children: <Widget>[
@@ -98,7 +128,7 @@ class MapScreenState extends State<ProfilePage> {
                         children: <Widget>[
                           Padding(
                               padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 25.0),
+                                  left: 25.0, right: 25.0, top: 1.0),
                               child: new Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -161,7 +191,46 @@ class MapScreenState extends State<ProfilePage> {
                           myreg
                               ? Padding(
                                   padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 2.0),
+                                      left: 20.0, right: 10.0, top: 25.0),
+                                  child: MultiSelectDialogField(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    items: convertedJsonData != null
+                                        ? convertedJsonData
+                                            .map((e) => MultiSelectItem<String>(
+                                                e.topic, e.category))
+                                            .toList()
+                                        : null,
+                                    title: Text("Category"),
+                                    //  selectedColor: Colors.blue,
+                                    decoration: BoxDecoration(
+                                      //color: Colors.blue.withOpacity(0.1),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                      border: Border.all(
+                                        color: Colors.blue,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    // buttonIcon: Icon(
+                                    //   Icons.pets,
+                                    //   color: Colors.blue,
+                                    // ),
+                                    buttonText: Text(
+                                      "Select Category",
+                                      style: TextStyle(
+                                        color: Colors.blue[800],
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    onConfirm: (results) {
+                                      _value = results;
+                                    },
+                                  ))
+                              : new  Container(),
+                          myreg
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 25.0, right: 25.0, top: 5.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[
@@ -427,10 +496,8 @@ class MapScreenState extends State<ProfilePage> {
                       width: MediaQuery.of(context).size.width / 2,
                       child: Visibility(
                           visible: _status,
-                          child: new RaisedButton(
+                          child: new ElevatedButton(
                             child: new Text("Continue"),
-                            textColor: Colors.white,
-                            color: Colors.red,
                             onPressed: () async {
                               final prefs =
                                   await SharedPreferences.getInstance();
@@ -446,7 +513,7 @@ class MapScreenState extends State<ProfilePage> {
                               prefs.setString("userphotourl", _user.photoURL);
                               prefs.setString("usertype", _site);
                               prefs.setString("ngoname", mycontrollerReg.text);
-                              prefs.commit();
+                              prefs.setStringList("cat", _value);
 
                               /* final fs = FirebaseFirestore.instance;
                               await fs.collection("Registration").add({
@@ -459,18 +526,20 @@ class MapScreenState extends State<ProfilePage> {
                                 "EmgFriend": myControllerEmgFrnd.text
                               }); */
                               Users users = new Users(
-                                name: _user.displayName,
-                                mobile: myControllerMob.text,
-                                email: _user.email,
-                                photourl: _user.photoURL,
-                                type: _site,
-                              );
+                                  name: _user.displayName,
+                                  mobile: myControllerMob.text,
+                                  email: _user.email,
+                                  photourl: _user.photoURL,
+                                  type: _site,
+                                  cat: _value.join(),
+                                  ngoname: mycontrollerReg.text);
 
-                              var res = APIServices.postUsers(users);
-                              if (res == 0) {
+                              var res = await APIServices.postUsers(users);
+                              if (res != 200) {
                                 showdg(context, "Error", "Error saving data");
                                 return;
                               }
+                              myreg ? subscribeToTopic() : null;
 
                               Navigator.pushReplacement(
                                 context,
@@ -478,14 +547,22 @@ class MapScreenState extends State<ProfilePage> {
                                     builder: (context) => HomePage()),
                               );
                             },
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(20.0)),
+                            style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.purple,
+                                textStyle: TextStyle(
+                                    fontSize: 30, fontWeight: FontWeight.bold)),
                           ))),
                 ],
               ),
             ],
           ),
         ));
+  }
+
+  Future<void> subscribeToTopic() async {
+    for (var element in _value) {
+     var res= await FirebaseMessaging.instance.subscribeToTopic(element);
+    }
   }
 
   @override
@@ -506,10 +583,8 @@ class MapScreenState extends State<ProfilePage> {
             child: Padding(
               padding: EdgeInsets.only(right: 10.0),
               child: Container(
-                  child: new RaisedButton(
+                  child: new ElevatedButton(
                 child: new Text("Save"),
-                textColor: Colors.white,
-                color: Colors.green,
                 onPressed: () async {
                   setState(() {
                     if (isNameValid ||
@@ -540,8 +615,6 @@ class MapScreenState extends State<ProfilePage> {
 
                   // If the form is valid, display a Snackbar.
                 },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
               )),
             ),
             flex: 2,

@@ -14,6 +14,7 @@ import 'video_items.dart';
 //import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 // ignore: unused_import
 enum UrlType { IMAGE, VIDEO, UNKNOWN }
+
 bool NGO = false;
 String _ngoname;
 int _id;
@@ -23,6 +24,7 @@ String _category;
 String _sex;
 String _age;
 String _lat, _long, _status, _dated, _mtype;
+TextEditingController mytextcommt = TextEditingController();
 
 class ViewRequest extends StatefulWidget {
   final String id;
@@ -62,8 +64,8 @@ class _State extends State<ViewRequest> {
 
   @override
   void dispose() {
-    controller.dispose();
-    _chewieController.dispose();
+    //controller.dispose();
+    //_chewieController.dispose();
     super.dispose();
   }
 
@@ -185,95 +187,111 @@ class _State extends State<ViewRequest> {
                       child: Container(
                         margin: EdgeInsets.all(10),
                         alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Column(
                           children: [
-                            //Padding(padding: EdgeInsets.only(left: 0.0)),
-                            RaisedButton(
-                                color: Color(0xff024A8E),
-                                onPressed: () async {
-                                  Ngo users = new Ngo(
-                                    id: _id,
-                                    ngo: _ngoname,
-                                    action: 'Short Listed',
-                                  );
+                            Container(
+                              width: MediaQuery.of(context).size.width - 100,
+                              child: TextFormField(
+                                controller: mytextcommt,
+                                decoration: InputDecoration(
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.auto,
+                                    labelText: "Remarks...",
+                                    errorStyle: TextStyle(
+                                        color: Colors.redAccent,
+                                        fontSize: 12.0),
+                                    hintText: 'Enter Your comments',
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10))),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                //Padding(padding: EdgeInsets.only(left: 0.0)),
 
-                                  var res = await APIServices.postNGoData(users)
-                                      .whenComplete(() => null);
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    Ngo users = new Ngo(
+                                        id: _id,
+                                        ngo: _ngoname,
+                                        action: 'Short Listed',
+                                        remarks: mytextcommt.text);
 
-                                  if (res != 200) {
-                                    showdg(
-                                        context, "Error", "Error saving data");
-                                    return;
-                                  }
-                                  if (res == 200) {
-                                    showdg(context, "Success",
-                                        "Needy Short Listed");
-                                  }
-                                },
-                                child: const Text('Short Listed',
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.white)),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(10.0))),
-                            Padding(padding: EdgeInsets.only(left: 5.0)),
+                                    var res =
+                                        await APIServices.postNGoData(users)
+                                            .whenComplete(() => null);
 
-                            RaisedButton(
-                                color: Color(0xff024A8E),
-                                onPressed: () async {
-                                  Ngo users = new Ngo(
-                                    id: _id,
-                                    ngo: _ngoname,
-                                    action: 'Ignore',
-                                  );
+                                    if (res != 200) {
+                                      showdg(context, "Error",
+                                          "Error saving data");
+                                      return;
+                                    }
+                                    if (res == 200) {
+                                      showdg(context, "Success",
+                                          "Needy Short Listed");
+                                    }
+                                  },
+                                  child: const Text('Short Listed',
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.white)),
+                                ),
+                                Padding(padding: EdgeInsets.only(left: 5.0)),
 
-                                  var res =
-                                      await APIServices.postNGoData(users);
-                                  if (res != 200) {
-                                    showdg(
-                                        context, "Error", "Error saving data");
-                                    return;
-                                  }
-                                  if (res == 200) {
-                                    showdg(context, "Success", "Needy Ignored");
-                                  }
-                                },
-                                child: const Text('Ignore',
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.white)),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(10.0))),
-                            Padding(padding: EdgeInsets.only(left: 5.0)),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    Ngo users = new Ngo(
+                                        id: _id,
+                                        ngo: _ngoname,
+                                        action: 'Ignore',
+                                        remarks: mytextcommt.text);
 
-                            RaisedButton(
-                                color: Color(0xff024A8E),
-                                onPressed: () async {
-                                  Ngo users = new Ngo(
-                                    id: _id,
-                                    ngo: _ngoname,
-                                    action: 'Hold',
-                                  );
+                                    var res =
+                                        await APIServices.postNGoData(users);
+                                    if (res != 200) {
+                                      showdg(context, "Error",
+                                          "Error saving data");
+                                      return;
+                                    }
+                                    if (res == 200) {
+                                      showdg(
+                                          context, "Success", "Needy Ignored");
+                                    }
+                                  },
+                                  child: const Text('Ignore',
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.white)),
+                                ),
+                                Padding(padding: EdgeInsets.only(left: 5.0)),
 
-                                  var res =
-                                      await APIServices.postNGoData(users);
-                                  if (res != 200) {
-                                    showdg(
-                                        context, "Error", "Error saving data");
-                                    return;
-                                  }
-                                  if (res == 200) {
-                                    showdg(context, "Success", "Needy on Hold");
-                                  }
-                                },
-                                child: const Text('Hold',
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.white)),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(10.0))),
-                            Padding(padding: EdgeInsets.only(left: 5.0)),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    Ngo users = new Ngo(
+                                        id: _id,
+                                        ngo: _ngoname,
+                                        action: 'Hold',
+                                        remarks: mytextcommt.text);
+
+                                    var res =
+                                        await APIServices.postNGoData(users);
+                                    if (res != 200) {
+                                      showdg(context, "Error",
+                                          "Error saving data");
+                                      return;
+                                    }
+                                    if (res == 200) {
+                                      showdg(
+                                          context, "Success", "Needy on Hold");
+                                    }
+                                  },
+                                  child: const Text('Hold',
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.white)),
+                                ),
+                                Padding(padding: EdgeInsets.only(left: 5.0)),
+                              ],
+                            ),
                           ],
                         ),
                       ),

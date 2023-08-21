@@ -6,10 +6,34 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+import 'CatMas.dart';
+
 class APIServices {
   static Future fetchUsers() async {
     return await http
-        .get('http://103.87.24.57/HelpTheNeedyAPI/api/Registration');
+        .get(Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Registration'));
+  }
+
+  static Future fetchUsersid(String id) async {
+    return await http.get(
+        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Registration/' + id));
+  }
+
+  static Future<List<CatMas>> fetchCat() async {
+    try {
+      var response = await http
+          .get(Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Category'));
+      if (response.statusCode == 200) {
+        // final List<User> user = userFromJson(response.body);
+        // return user;
+
+        return catMasFromJson(response.body);
+      } else {
+        return throw Exception('Failed to load ...');
+      }
+    } catch (e) {
+      return throw Exception('Failed to load ...');
+    }
   }
 
   static Future postUsers(Users users) async {
@@ -20,19 +44,21 @@ class APIServices {
     var myUsers = users.toJson();
     var usersBody = json.encode(myUsers);
     var res = await http.post(
-        'http://103.87.24.57/HelpTheNeedyAPI/api/Registration',
+        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Registration'),
         headers: header,
         body: usersBody);
-    print(res.statusCode);
+    print(res);
     return res.statusCode;
   }
 
   static Future<http.Response> fetchNeedyDataCat(String id) async {
-    return await http.get('http://103.87.24.57/HelpTheNeedyAPI/api/Data/' + id);
+    return await http
+        .get(Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Data/' + id));
   }
 
   static Future<http.Response> fetchNeedyData() async {
-    return await http.get('http://103.87.24.57/HelpTheNeedyAPI/api/Data');
+    return await http
+        .get(Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Data'));
   }
 
   static Future postNeedyData(NeedyData users) async {
@@ -42,15 +68,17 @@ class APIServices {
     };
     var myUsers = users.toJson();
     var usersBody = json.encode(myUsers);
-    var res = await http.post('http://103.87.24.57/HelpTheNeedyAPI/api/Data',
-        headers: header, body: usersBody);
+    var res = await http.post(
+        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Data'),
+        headers: header,
+        body: usersBody);
     print(res.body);
     return res.body;
   }
 
   static Future<http.Response> fetchNGoData(String id) async {
-    return await http
-        .get('http://103.87.24.57/HelpTheNeedyAPI/api/NgoAction/' + id);
+    return await http.get(
+        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/NgoAction/' + id));
   }
 
   static Future postNGoData(Ngo users) async {
@@ -61,7 +89,7 @@ class APIServices {
     var myUsers = users.toJson();
     var usersBody = json.encode(myUsers);
     var res = await http.post(
-        'http://103.87.24.57/HelpTheNeedyAPI/api/NgoAction',
+        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/NgoAction'),
         headers: header,
         body: usersBody);
     print(res.statusCode);
@@ -76,7 +104,7 @@ class APIServices {
     var myUsers = users.toJson();
     var usersBody = json.encode(myUsers);
     var res = await http.post(
-        'http://103.87.24.57/HelpTheNeedyAPI/api/Feedback',
+        Uri.parse('http://103.87.24.57/HelpTheNeedyAPI/api/Feedback'),
         headers: header,
         body: usersBody);
     print(res.statusCode);

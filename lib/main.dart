@@ -1,5 +1,6 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/models/AppStateNotifier.dart';
 import 'package:flutter_application_2/ui/AboutUs.dart';
@@ -9,13 +10,14 @@ import 'package:flutter_application_2/ui/Latest.dart';
 import 'package:flutter_application_2/ui/splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'firbase_option.dart';
+
 import 'ui/Needy.dart';
 import 'ui/PressRelease.dart';
 import 'ui/camera.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'ui/Emergency.dart';
-import 'ui/Nearby.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'ui/Feedback.dart';
 import 'ui/loginscreen.dart';
@@ -28,15 +30,48 @@ String _userphotourl;
 bool isSwitched;
 var textValue = 'Switch is OFF';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void getParams() {
+  var uri;
+  Map<String, String> params = uri.queryParameters;
+  var origin = params['origin'];
+  var destiny = params['destiny'];
+  print(origin);
+  print(destiny);
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+}
+
+FirebaseMessaging messaging;
+void main() async {
+  //await init();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+   
+  );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
+  });
   runApp(
     ChangeNotifierProvider<AppStateNotifier>(
       child: MyHome(),
       create: (context) => AppStateNotifier(),
     ),
   );
+}
+
+Future init() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 }
 
 class HomePage extends StatefulWidget {
@@ -47,29 +82,29 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   TabController _tabController;
+  String notificationTitle = 'No Title';
+  String notificationBody = 'No Body';
+  String notificationData = 'No Data';
 
   // ignore: non_constant_identifier_names
   String ShareText =
       "Welcome to Help the Needy App, Install the app for helping the needy from : https://play.google.com/store/apps/details?id=com.help.theneedy";
   @override
   void initState() {
+    
+
     setuser();
 
     super.initState();
   }
 
+  
+
   @override
   void dispose() {
-    _tabController.dispose();
+    // _tabController.dispose();
 
     super.dispose();
-  }
-
-  @override
-  void didChangePlatformBrightness() {
-    final Brightness brightness =
-        WidgetsBinding.instance.window.platformBrightness;
-    //inform listeners and rebuild widget tree
   }
 
   void launchWhatsApp({
@@ -88,22 +123,6 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget build(BuildContext context) {
-    void toggleSwitch(bool value) {
-      if (isSwitched == false) {
-        setState(() {
-          isSwitched = true;
-          textValue = 'Switch Button is ON';
-        });
-        print('Switch Button is ON');
-      } else {
-        setState(() {
-          isSwitched = false;
-          textValue = 'Switch Button is OFF';
-        });
-        print('Switch Button is OFF');
-      }
-    }
-
     return DefaultTabController(
       initialIndex: 1,
       length: 4,
@@ -191,20 +210,6 @@ class _HomePageState extends State<HomePage>
                     context,
                     MaterialPageRoute(builder: (context) => AboutUs()),
                   );
-                },
-              ),
-              ListTile(
-                title: Text('Near By Me'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Nearby()),
-                  );
-
-                  // Update the state of the app
-                  // ...
-                  // Then close the drawer
-                  // Navigator.pop(context);
                 },
               ),
               ListTile(

@@ -101,8 +101,8 @@ class _State extends State<Emergency> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         //Padding(padding: EdgeInsets.only(left: 5.0)),
-                        RaisedButton(
-                            color: Colors.green,
+                        ElevatedButton(
+                        
                             onPressed: () {
                               sms(emgHome,
                                   'I am Safe my Location link https://map.google.com/maps/?q=$lat,$lng');
@@ -112,10 +112,9 @@ class _State extends State<Emergency> {
                             child: const Text('Safe',
                                 style: TextStyle(
                                     fontSize: 18, color: Colors.white)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10.0))),
-                        RaisedButton(
-                            color: Colors.yellow,
+                            ),
+                        ElevatedButton(
+                         
                             onPressed: () {
                               sms(emgHome,
                                   'Kindly keep on watch my Location link https://map.google.com/maps/?q=$lat,$lng');
@@ -125,10 +124,9 @@ class _State extends State<Emergency> {
                             child: const Text('Watch',
                                 style: TextStyle(
                                     fontSize: 18, color: Colors.black)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10.0))),
-                        RaisedButton(
-                            color: Colors.red,
+                            ),
+                        ElevatedButton(
+                          
                             onPressed: () {
                               sms(emgHome,
                                   'I am unsafe my Location link https://map.google.com/maps/?q=$lat,$lng');
@@ -138,8 +136,7 @@ class _State extends State<Emergency> {
                             child: const Text('Unsafe',
                                 style: TextStyle(
                                     fontSize: 18, color: Colors.white)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10.0))),
+                            ),
                       ],
                     ),
                   ),
@@ -154,7 +151,7 @@ class _State extends State<Emergency> {
   }
 
   location() async {
-    var p = await Geolocator()
+    var p = await Geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
     setState(() {
       lat = p.latitude;

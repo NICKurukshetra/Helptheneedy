@@ -51,7 +51,7 @@ class _State extends State<NGO> {
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      RaisedButton(
+                      ElevatedButton(
                         //color: Colors.brown,
                         onPressed: () {},
                         //=> _selectDate(context),
@@ -62,8 +62,7 @@ class _State extends State<NGO> {
                               //fontWeight: FontWeight.bold,
                               ),
                         ),
-                        padding: EdgeInsets.only(
-                            left: 10, right: 10, bottom: 5.0, top: 5.0),
+                        
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 15.0),
@@ -79,10 +78,8 @@ class _State extends State<NGO> {
               child: Row(
                 children: [
                   Padding(padding: EdgeInsets.only(left: 5.0)),
-                  new RaisedButton(
-                      padding: EdgeInsets.only(left: 36, right: 36),
-                      child: const Text('Place'),
-                      onPressed: () {}),
+                  new ElevatedButton(
+                      child: const Text('Place'), onPressed: () {}),
                   Padding(padding: EdgeInsets.only(left: 5.0)),
                 ],
               ),

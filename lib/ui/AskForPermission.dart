@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 
 import 'package:android_intent/android_intent.dart';
+import 'package:flutter/material.dart';
+
 import 'package:geolocator/geolocator.dart';
 
 class RequestPermion {
@@ -8,7 +9,7 @@ class RequestPermion {
 
 /*Show dialog if GPS not enabled and open settings location*/
   Future _checkGps() async {
-    if (!(await Geolocator().isLocationServiceEnabled())) {
+    if (!(await Geolocator.isLocationServiceEnabled())) {
       if (Theme.of(this.context).platform == TargetPlatform.android) {
         showDialog(
             context: context,
@@ -18,7 +19,7 @@ class RequestPermion {
                 content:
                     const Text('Please make sure you enable GPS and try again'),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                       child: Text('Ok'),
                       onPressed: () {
                         final AndroidIntent intent = AndroidIntent(
@@ -37,7 +38,7 @@ class RequestPermion {
 
 /*Check if gps service is enabled or not*/
   Future _gpsService() async {
-    if (!(await Geolocator().isLocationServiceEnabled())) {
+    if (!(await Geolocator.isLocationServiceEnabled())) {
       _checkGps();
       return null;
     } else

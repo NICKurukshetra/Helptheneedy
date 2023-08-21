@@ -37,10 +37,19 @@ class _NgoActionState extends State<NgoAction> {
                             child: ListTile(
                           tileColor: Colors.white10,
                           title: Text("NGO : " + snapshot.data[index].ngo),
-                          subtitle: Text("Action : " +
-                              snapshot.data[index].action +
-                              'Dated ' +
-                              snapshot.data[index].dated),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Action : " +
+                                  snapshot.data[index].action +
+                                  ' Dated ' +
+                                  snapshot.data[index].dated),
+                              snapshot.data[index].remarks != null
+                                  ? Text("Remarks : " +
+                                      snapshot.data[index].remarks)
+                                  : "",
+                            ],
+                          ),
                         ));
                       },
                     )
